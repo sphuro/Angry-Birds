@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Vector2;
 import javax.swing.event.ChangeListener;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Random;
 
 
 public class LevelScreen extends Main implements Screen {
@@ -44,6 +45,7 @@ public class LevelScreen extends Main implements Screen {
     private Texture six;
     private Texture seven;
     private Texture eight;
+    private Image eightimage;
     private Texture back;
     private Image backImage;
     private Vector2 mouse;
@@ -68,7 +70,8 @@ public class LevelScreen extends Main implements Screen {
         five = new Texture("levelfive.png");
         six = new Texture("levelsix.png");
         seven = new Texture("levelseven.png");
-        eight = new Texture("leveleight.png");
+        eight = new Texture("restart.png");
+        eightimage=new Image(eight);
         back = new Texture("back.png");
         backImage = new Image(back);
         backImage.setPosition(660,125);
@@ -79,6 +82,8 @@ public class LevelScreen extends Main implements Screen {
         twoImage.setSize(150,150);
         threeImage.setPosition(900,600);
         threeImage.setSize(150,150);
+        eightimage.setPosition(1250,350);
+        eightimage.setSize(150,150);
         levelone = false;
         leveltwo = false;
         levelthree = false;
@@ -101,6 +106,16 @@ public class LevelScreen extends Main implements Screen {
                 levelthree = true;
             }
         });
+        eightimage.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Random clicked");
+                Random rand = new Random();
+                int curr=rand.nextInt(3);
+                if (curr==0) levelone=true;
+                else if (curr==1) leveltwo=true;
+                else if (curr==2) levelthree=true;
+            }
+        });
         backImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Back clicked");
@@ -121,6 +136,7 @@ public class LevelScreen extends Main implements Screen {
         stage.addActor(twoImage);
         stage.addActor(threeImage);
         stage.addActor(backImage);
+        stage.addActor(eightimage);
         Gdx.input.setInputProcessor(stage);
         if (backed) {
             game.setScreen(new MenuScreen(game));
