@@ -1,8 +1,5 @@
-# Jatin Aggarwal ( 2023258 )
-# Anant Gyan Singhal ( 2023082 )
-
 # Angry Birds
-
+___
 Angry Birds is a popular puzzle video game. It has a simple story: the pigs stole the birds’ eggs, so the birds try
 to get them back. In every level, the player uses a slingshot to launch the birds at the pigs that are standing on
 buildings made of blocks. Each level gives the player a line of birds; the bird sitting on the slingshot is launched
@@ -12,7 +9,7 @@ and disappear. The bird can also hit the pig itself to destroy it. The player ha
 map to unlock another level.
 
 ## Content
-
+___
 1. [Classes](#classes)
 2. [Use Case](#use-case)
 3. [UML](#UML)
@@ -22,7 +19,7 @@ map to unlock another level.
 7. [Github Link](#Github-Link)
 
 ## Classes
-
+___
 1. ### Bird
    Interface for various type of birds.
 2. ### BlackBird
@@ -81,20 +78,22 @@ map to unlock another level.
     Helps in drawing vertical log
 
 ## Use Case
+___
 ![image](usecase.png)
 
 ## UML
+___
 ![image2](UML_class_Diagrma_2.png)
 
 ## Learning Resources
-
+___
 1. https://libgdx.com/dev/
 2. https://libgdx.com/wiki/
 3. https://github.com/libgdx/libgdx
 4. https://www.youtube.com/watch?v=YCGmXVCvogY&list=PLrnO5Pu2zAHKAIjRtTLAXtZKMSA6JWnmf&ab_channel=HollowBit
 
 ## Assets
-
+___
 1. https://angrybirds.fandom.com/wiki/Angry_Birds_Wiki
 2. https://www.vecteezy.com/free-vector/angry-birds-game
 3. https://angrybirdsfanon.fandom.com/wiki/Angry_Birds_Survival?file=71AB7876-462E-419B-B06C-711C6EFCBC35.png
@@ -103,16 +102,21 @@ map to unlock another level.
 6. https://in.pinterest.com/pin/angry-birds-toons-backgrounds-on-behance--269371621454537528/
 
 ## How to run
-
-Unzip the file.<br>
-Go to lwjgl3.<br>
-Then src.<br>
-Then main.<br>
-Then java.<br>
-Then com.AngryBirds.lwjgl3.<br>
-Then Lwjgl3Launcher.<br>
-Then click on Run.
+___
+- Unzip the file.<br>
+- Go to lwjgl3.<br>
+- Then src.<br>
+- Then main.<br>
+- Then java.<br>
+- Then com.AngryBirds.lwjgl3.<br>
+- Then Lwjgl3Launcher.<br>
+- Then click on Run.
 
 ## Github Link
-
+____
 https://github.com/heckerm4n/Angry-Birds
+
+## Creators
+___
+- Jatin Aggarwal ( 2023258 )
+- Anant Gyan Singhal ( 2023082 )
