@@ -103,15 +103,16 @@ ___
 
 ## How to run
 ___
-- Unzip the file.<br>
-- Go to lwjgl3.<br>
-- Then src.<br>
-- Then main.<br>
-- Then java.<br>
-- Then com.AngryBirds.lwjgl3.<br>
-- Then Lwjgl3Launcher.<br>
+```
+- Unzip the file.
+- Go to lwjgl3.
+- Then src.
+- Then main.
+- Then java.
+- Then com.AngryBirds.lwjgl3.
+- Then Lwjgl3Launcher.
 - Then click on Run.
-
+```
 ## Github Link
 ____
 https://github.com/heckerm4n/Angry-Birds
