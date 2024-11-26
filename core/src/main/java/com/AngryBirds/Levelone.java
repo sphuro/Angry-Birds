@@ -1,14 +1,14 @@
 package com.AngryBirds;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,6 +23,7 @@ import org.w3c.dom.Text;
 import javax.swing.event.ChangeListener;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Levelone extends Main implements Screen {
@@ -35,8 +36,6 @@ public class Levelone extends Main implements Screen {
     private Image backgroundImage;
     private Texture blocks;
     private Image blocksImage;
-    private Texture birds;
-    private Image birdsImage;
     private Texture pause;
     private Image pauseImage;
     private Texture musicon;
@@ -59,13 +58,23 @@ public class Levelone extends Main implements Screen {
     private BlueBird second;
     private BlackBird third;
     private LevelStructure structure;
+    private Slingshot sling;
+    private World world;
+    private InputMultiplexer multiplexer;
+    private ArrayList<Slingshot> birds;
+    private Instant birdy;
+    private boolean setted = false;
+    private CheckCollision lis;
+    private Instant noo;
 
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false;
 
     public Levelone(Main game) {
         this.game = game;
+        world = new World(new Vector2(0,-9.8f), true);
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
+        sling = new Slingshot(world,stage,"black",camera);
         viewport = new StretchViewport(1600, 900, camera);
         stage = new Stage(viewport, batch);
         background = new Texture("levelonebackground.png");
@@ -74,10 +83,6 @@ public class Levelone extends Main implements Screen {
         blocksImage = new Image(blocks);
         blocksImage.setSize(617*0.75f,512*0.75f);
         blocksImage.setPosition(900,230);
-        birds = new Texture("levelonebirds.png");
-        birdsImage = new Image(birds);
-        birdsImage.setSize(104,42);
-        birdsImage.setPosition(180,230);
         pause = new Texture("levelpause.png");
         pauseImage = new Image(pause);
         musicon = new Texture("musicon.png");
@@ -110,22 +115,37 @@ public class Levelone extends Main implements Screen {
         first=new RedBird(game);
         second=new BlueBird(game);
         third=new BlackBird(game);
-        structure=new LevelStructure(game);
+        birdy = Instant.now();
+        birds = new ArrayList<>();
+        birds.add(new Slingshot(world,stage,"blue",camera));
+        birds.add(new Slingshot(world,stage,"black",camera));
+        birds.add(new Slingshot(world,stage,"blue",camera));
+        birds.add(new Slingshot(world,stage,"red",camera));
+        structure=new LevelStructure(game,world,camera);
         structure.add("box",1050,220,81,81);
-        structure.add("box",1131,220,81,81);
+        structure.add("stonebox",1131,220,81,81);
         structure.add("box",1212,220,81,81);
-        structure.add("box",1050,301,81,81);
+        structure.add("box",1293,220,81,81);
+        structure.add("stonebox",1293,301,81,81);
+        structure.add("stonebox",1212,382,81,81);
+//        structure.add("box",1050,301,81,81);
         structure.add("box",1131,301,81,81);
-        structure.add("box",1090,382,81,81);
-        structure.add("log",1050,463,162,19);
-        structure.add("box",1050,482,81,81);
-        structure.add("box",1131,482,81,81);
-        structure.add("log",1171,382,162,19);
-        structure.add("pig",1106,398,48,48);
-        structure.add("pig",1066,236,48,48);
-        structure.add("pig",1236,301,48,48);
-        structure.add("kingpig",1240,401,64,72);
-        structure.add("verticallog",1300,220,19,162);
+        structure.add("stonebox",1212,463,81,81);
+        structure.add("glassbox",1131,382,81,81);
+        structure.add("log",1050,401,162,19);
+        structure.add("box",969,220,81,81);
+        structure.add("box",969,301,81,81);
+        structure.add("glassbox",969,382,81,81);
+        structure.add("stonebox",1050,463,81,81);
+
+//        structure.add("stonebox",1212,301,81,81);
+//        structure.add("stonebox",1212,382,81,81);
+//        structure.add("glassbox",1212,,100,100);
+//        structure.add("helmetpig",100,100,50,50);
+        structure.add("helmetpig",969,430,48,48);
+        structure.add("helmetpig",1293,349,48,48);
+        structure.add("pig",1212,268,48,48);
+        structure.add("kingpig",1050,349,48,48);
         pauseImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Pause clicked");
@@ -169,13 +189,14 @@ public class Levelone extends Main implements Screen {
                 exited=!exited;
             }
         });
-
+        lis = new CheckCollision(world);
+        world.setContactListener(lis);
     }
+
     @Override
     public void show() {
 
     }
-
     @Override
     public void render(float delta) {
         batch.setProjectionMatrix(camera.combined);
@@ -188,11 +209,13 @@ public class Levelone extends Main implements Screen {
         stage.addActor(exitImage);
         stage.addActor(musicoffImage);
         stage.addActor(soundoffImage);
-        stage.addActor(birdsImage);
         stage.addActor(blocksImage);
-        Gdx.input.setInputProcessor(stage);
+        multiplexer = new InputMultiplexer();
+        if (birds.size()==0) multiplexer.setProcessors(stage);
+        else multiplexer.setProcessors(stage, birds.get(0).getFirst());
+        Gdx.input.setInputProcessor(multiplexer);
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            pa = new LevelPassed(game);
+            pa = new LevelPassed(game,birds.size());
             passed=true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.L)) {
@@ -209,14 +232,17 @@ public class Levelone extends Main implements Screen {
             game.setScreen(new Leveltwo(game));
         }
         else if (paused) {
-            birdsImage.remove();
             blocksImage.remove();
             batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
             batch.draw(blocks, 0, 0, 0, 0);
-            slingshot.draw_slingshot(300,220,46,129);
-            first.draw(180,220,43,42);
-            second.draw(215,220,38,42);
-            third.draw(245,220,43,45);
+//            slingshot.draw_slingshot(300,220,46,129);
+//            first.draw(180,220,43,42);
+//            second.draw(215,220,38,42);
+//            third.draw(245,220,43,45);
+            if (birds.size()>=2) first.draw(180,220,43,42);
+            if (birds.size()>=3) second.draw(215,220,38,42);
+            if (birds.size()>=4) third.draw(245,220,43,45);
+            if (birds.size()>0) birds.get(0).helper();
             structure.draw();
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = ne.draw();
@@ -232,14 +258,13 @@ public class Levelone extends Main implements Screen {
             restartImage.remove();
             exitImage.remove();
             blocksImage.remove();
-            birdsImage.remove();
             pauseImage.remove();
             batch.draw(background, 0, 0,viewport.getWorldWidth(), viewport.getWorldHeight());
             batch.draw(blocks, 0, 0, 0, 0);
-            slingshot.draw_slingshot(300,220,46,129);
-            first.draw(180,220,43,42);
-            second.draw(215,220,38,42);
-            third.draw(245,220,43,45);
+//            slingshot.draw_slingshot(300,220,46,129);
+//            first.draw(180,220,43,42);
+//            second.draw(215,220,38,42);
+//            third.draw(245,220,43,45);
             structure.draw();
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = fa.draw();
@@ -254,14 +279,13 @@ public class Levelone extends Main implements Screen {
             restartImage.remove();
             exitImage.remove();
             blocksImage.remove();
-            birdsImage.remove();
             pauseImage.remove();
             batch.draw(background, 0, 0,viewport.getWorldWidth(), viewport.getWorldHeight());
             batch.draw(blocks, 0, 0, 0, 0);
-            slingshot.draw_slingshot(300,220,46,129);
-            first.draw(180,220,43,42);
-            second.draw(215,220,38,42);
-            third.draw(245,220,43,45);
+//            slingshot.draw_slingshot(300,220,46,129);
+            if (birds.size()>=2) first.draw(180,220,43,42);
+            if (birds.size()>=3) second.draw(215,220,38,42);
+            if (birds.size()>=4) third.draw(245,220,43,45);
             structure.draw();
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = pa.draw();
@@ -277,14 +301,36 @@ public class Levelone extends Main implements Screen {
             restartImage.remove();
             exitImage.remove();
             batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
-            batch.draw(blocks,0, 0, 0, 0);
-            slingshot.draw_slingshot(300,220,46,129);
-            first.draw(180,220,43,42);
-            second.draw(215,220,38,42);
-            third.draw(245,220,43,45);
-            structure.draw();
-//            batch.draw(birds, 180, 230, 104, 42);
             batch.draw(pause, 50, 750, 80, 80);
+            stage.addActor(pauseImage);
+            batch.draw(blocks,0, 0, 0, 0);
+//            slingshot.draw_slingshot(300,220,46,129);
+//            setScreen(new Slingshot());
+//            sling.render();
+            if (birds.size()>=2) first.draw(180,220,43,42);
+            if (birds.size()>=3) second.draw(215,220,38,42);
+            if (birds.size()>=4) third.draw(245,220,43,45);
+            if (structure.checkpig()) {
+                pa = new LevelPassed(game,birds.size());
+                passed=true;
+            }
+            if (birds.size()==0) {
+                fa = new LevelFailed(game);
+                failed = true;
+            }
+            if (birds.size()>0 && birds.get(0).isDestroyed() && Duration.between(birds.get(0).getNo(),Instant.now()).toSeconds()>5) {
+                world.destroyBody(birds.get(0).getbody());
+                birds.remove(0);
+            }
+            while (!lis.getTodestroy().isEmpty()) {
+                if (!lis.getDestroyed().contains(lis.getTodestroy().get(0))) world.destroyBody(lis.getTodestroy().get(0));
+                lis.getDestroyed().add(lis.getTodestroy().get(0));
+                lis.getTodestroy().remove(0);
+            }
+            structure.draw();
+            if (birds.size()>0) birds.get(0).helper();
+//            batch.draw(birds, 180, 230, 104, 42);
+
         }
         batch.end();
     }

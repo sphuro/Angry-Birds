@@ -12,7 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class Log extends Main implements Screen,Materials {
+
+public class StoneLog extends Main implements Screen,Materials {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Stage stage;
@@ -35,7 +36,7 @@ public class Log extends Main implements Screen,Materials {
     private Sprite block_sprite;
     private Box2DDebugRenderer debugRenderer;
 
-    public Log(Main game,float x,float y,float width,float height,World world,OrthographicCamera camera) {
+    public StoneLog(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
         debugRenderer = new Box2DDebugRenderer();
@@ -44,7 +45,7 @@ public class Log extends Main implements Screen,Materials {
         this.world = world;
         viewport = new StretchViewport(1600, 900, camera);
         stage = new Stage(viewport, batch);
-        log = new Texture("log.png");
+        log = new Texture("stonelog.png");
         this.x = x;
         this.y = y;
         this.width = width;

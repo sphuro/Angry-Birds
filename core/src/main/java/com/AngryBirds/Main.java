@@ -20,7 +20,7 @@ public class Main extends Game {
     private boolean musicopen=true,soundopen=true;
     @Override
     public void create() {
-        setScreen(new LoadingScreen(this));
+        setScreen(new LevelScreen(this));
 //        setScreen(new Levelone(this));
 //        setScreen(new MenuScreen(this));
     }

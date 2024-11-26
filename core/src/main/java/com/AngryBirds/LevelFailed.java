@@ -88,6 +88,7 @@ public class LevelFailed extends Main implements Screen {
             return "next";
         }
         else {
+            batch.draw(new Texture("slingshot.png"),370,210,80,200);
             batch.draw(failbackground, 0, 0,viewport.getWorldWidth(), viewport.getWorldHeight());
             batch.draw(menu2,620,100,100,100);
             batch.draw(restart3,880,100,100,100);

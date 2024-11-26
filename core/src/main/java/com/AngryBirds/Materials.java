@@ -1,5 +1,7 @@
 package com.AngryBirds;
 
+import com.badlogic.gdx.physics.box2d.Body;
+
 public interface Materials {
     void show();
 
@@ -16,4 +18,8 @@ public interface Materials {
     void hide();
 
     void dispose();
+
+    void destroy();
+
+    Body getbody();
 }

@@ -39,11 +39,15 @@ public class LevelPassed extends Main implements Screen {
     private Image menuImage;
     private Texture restart2;
     private Image restart2Image;
+    private int stars;
 
     private boolean paused,exited=false,restarting=false,nextc=false;
 
-    public LevelPassed(Main game) {
+    public LevelPassed(Main game,int stars) {
         this.game = game;
+        if (stars<=1) this.stars=1000;
+        else if (stars==2) this.stars=2000;
+        else this.stars=3000;
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new StretchViewport(1600, 900, camera);
@@ -105,17 +109,18 @@ public class LevelPassed extends Main implements Screen {
             return "next";
         }
         else {
+            batch.draw(new Texture("slingshot.png"),370,210,80,200);
             batch.draw(passedbackground,0,0,1600,900);
             if (Duration.between(start,Instant.now()).toMillis()>1000) {
                 batch.draw(star,620,287,72,76);
             }
-            if (Duration.between(start,Instant.now()).toMillis()>2000) {
+            if (Duration.between(start,Instant.now()).toMillis()>2000 && stars>1000) {
                 batch.draw(star,732,289,72,76);
             }
-            if (Duration.between(start,Instant.now()).toMillis()>3000) {
+            if (Duration.between(start,Instant.now()).toMillis()>3000 && stars>2000) {
                 batch.draw(star,845,288,72,76);
             }
-            if (Duration.between(start,Instant.now()).toMillis()>3000) {
+            if (Duration.between(start,Instant.now()).toMillis()>stars) {
                 batch.draw(menu,520,150,100,100);
                 batch.draw(restart2,920,150,100,100);
                 batch.draw(next,720,150,100,100);

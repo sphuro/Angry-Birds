@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -37,12 +38,17 @@ public class LevelStructure extends Main implements Screen {
     private ArrayList<Box> boxes;
     private ArrayList<Pig> pigs;
     private ArrayList<KingPig> kingpigs;
-    private ArrayList<VerticalLog> verticalLogs;
+    private ArrayList<HelmetPig> helmetPigs;
+    private ArrayList<Stonebox> stonebox;
+    private ArrayList<StoneLog> stonelog;
+    private ArrayList<GlassBox> glassbox;
+    private World world;
 
-    public LevelStructure(Main game) {
+    public LevelStructure(Main game,World world,OrthographicCamera camera) {
         this.game = game;
+        this.world = world;
         batch = new SpriteBatch();
-        camera = new OrthographicCamera();
+        this.camera = camera;
         viewport = new StretchViewport(1600, 900, camera);
         stage = new Stage(viewport, batch);
         box = new Texture("box.png");
@@ -50,11 +56,28 @@ public class LevelStructure extends Main implements Screen {
         boxes = new ArrayList<>();
         pigs = new ArrayList<>();
         kingpigs = new ArrayList<>();
-        verticalLogs = new ArrayList<>();
+        helmetPigs = new ArrayList<>();
+        stonebox = new ArrayList<>();
+        stonelog = new ArrayList<>();
+        glassbox = new ArrayList<>();
     }
     @Override
     public void show() {
 
+    }
+
+    public boolean checkpig() {
+        int cnt = 0;
+        for (Pig pig : pigs) {
+            if (!pig.isDestroyed()) cnt++;
+        }
+        for (KingPig pig : kingpigs) {
+            if (!pig.isDestroyed()) cnt++;
+        }
+        for (HelmetPig pig : helmetPigs) {
+            if (!pig.isDestroyed()) cnt++;
+        }
+        return cnt == 0;
     }
 
     public void draw() {
@@ -73,7 +96,16 @@ public class LevelStructure extends Main implements Screen {
         for (KingPig i:kingpigs) {
             i.draw();
         }
-        for (VerticalLog i:verticalLogs) {
+        for (HelmetPig i:helmetPigs) {
+            i.draw();
+        }
+        for (Stonebox i:stonebox) {
+            i.draw();
+        }
+        for (StoneLog i:stonelog) {
+            i.draw();
+        }
+        for (GlassBox i:glassbox) {
             i.draw();
         }
         batch.end();
@@ -81,19 +113,28 @@ public class LevelStructure extends Main implements Screen {
 
     public void add(String material,float x,float y,float width,float height){
         if (Objects.equals(material, "log")) {
-            logs.add(new Log(game,x,y,width,height));
+            logs.add(new Log(game,x,y,width,height,world,camera));
         }
         else if (Objects.equals(material, "box")) {
-            boxes.add(new Box(game,x,y,width,height));
+            boxes.add(new Box(game,x,y,width,height,world,camera));
         }
         else if (Objects.equals(material, "pig")) {
-            pigs.add(new Pig(game,x,y,width,height));
+            pigs.add(new Pig(game,x,y,width,height,world,camera));
         }
         else if (Objects.equals(material, "kingpig")) {
-            kingpigs.add(new KingPig(game,x,y,width,height));
+            kingpigs.add(new KingPig(game,x,y,width,height,world,camera));
         }
-        else if (Objects.equals(material, "verticallog")) {
-            verticalLogs.add(new VerticalLog(game,x,y,width,height));
+        else if (Objects.equals(material, "helmetpig")) {
+            helmetPigs.add(new HelmetPig(game,x,y,width,height,world,camera));
+        }
+        else if (Objects.equals(material, "stonebox")) {
+            stonebox.add(new Stonebox(game,x,y,width,height,world,camera));
+        }
+        else if (Objects.equals(material, "stonelog")) {
+            stonelog.add(new StoneLog(game,x,y,width,height,world,camera));
+        }
+        else if (Objects.equals(material, "glassbox")) {
+            glassbox.add(new GlassBox(game,x,y,width,height,world,camera));
         }
     }
 
