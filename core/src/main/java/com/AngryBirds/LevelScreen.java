@@ -49,6 +49,8 @@ public class LevelScreen extends Main implements Screen {
     private Texture back;
     private Image backImage;
     private Vector2 mouse;
+    private Texture lock;
+    private Texture star;
 
     private boolean levelone,leveltwo,levelthree,backed;
 
@@ -63,14 +65,16 @@ public class LevelScreen extends Main implements Screen {
         one = new Texture("levelone.png");
         two = new Texture("leveltwo.png");
         three = new Texture("levelthree.png");
+        lock = new Texture("lock.png");
         oneImage = new Image(one);
         twoImage = new Image(two);
         threeImage = new Image(three);
-        four = new Texture("levelfour.png");
-        five = new Texture("levelfive.png");
-        six = new Texture("levelsix.png");
-        seven = new Texture("levelseven.png");
+        four = new Texture("lock.png");
+        five = new Texture("lock.png");
+        six = new Texture("lock.png");
+        seven = new Texture("lock.png");
         eight = new Texture("restart.png");
+        star = new Texture("filled star.png");
         eightimage=new Image(eight);
         back = new Texture("back.png");
         backImage = new Image(back);
@@ -109,11 +113,12 @@ public class LevelScreen extends Main implements Screen {
         eightimage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Random clicked");
-                Random rand = new Random();
-                int curr=rand.nextInt(3);
-                if (curr==0) levelone=true;
-                else if (curr==1) leveltwo=true;
-                else if (curr==2) levelthree=true;
+//                Random rand = new Random();
+//                int curr=rand.nextInt(3);
+//                if (curr==0) levelone=true;
+//                else if (curr==1) leveltwo=true;
+//                else if (curr==2) levelthree=true;
+                game.setScreen(new RandomLevel(game));
             }
         });
         backImage.addListener(new ClickListener() {
@@ -154,8 +159,32 @@ public class LevelScreen extends Main implements Screen {
             batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
             batch.draw(back, 660, 125, 272.5f, 125);
             batch.draw(one, 200, 600, 150, 150);
-            batch.draw(two, 550, 600, 150, 150);
-            batch.draw(three, 900, 600, 150, 150);
+            int fir = game.getStars().get(0);
+            if (fir>0) batch.draw(star,200,570,50,50);
+            if (fir>1) batch.draw(star,250,590,50,50);
+            if (fir>2) batch.draw(star,300,570,50,50);
+            if (game.getStars().get(0)>0) {
+                batch.draw(two, 550, 600, 150, 150);
+                fir = game.getStars().get(1);
+                if (fir>0) batch.draw(star,550,570,50,50);
+                if (fir>1) batch.draw(star,600,590,50,50);
+                if (fir>2) batch.draw(star,650,570,50,50);
+            }
+            else {
+                twoImage.remove();
+                batch.draw(lock, 550, 600, 150, 150);
+            }
+            if (game.getStars().get(1)>0) {
+                batch.draw(three, 900, 600, 150, 150);
+                fir = game.getStars().get(2);
+                if (fir>0) batch.draw(star,900,570,50,50);
+                if (fir>1) batch.draw(star,950,590,50,50);
+                if (fir>2) batch.draw(star,1000,570,50,50);
+            }
+            else {
+                threeImage.remove();
+                batch.draw(lock, 900, 600, 150, 150);
+            }
             batch.draw(four, 1250, 600, 150, 150);
             batch.draw(five, 200, 350, 150, 150);
             batch.draw(six, 550, 350, 150, 150);

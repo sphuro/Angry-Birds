@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import java.time.Instant;
-import java.util.Objects;
 
 public class Slingshot extends ApplicationAdapter implements Screen {
     private OrthographicCamera camera;
@@ -24,11 +23,12 @@ public class Slingshot extends ApplicationAdapter implements Screen {
     private Body bird;
     private boolean destroyed = false;
     private boolean curr;
-    private float maxStretchDistance = 200;
     private Sprite birdSprite, slingshotSprite;
     private Stage stage;
     private InputProcessor first;
     private Instant no;
+    private Main game;
+    private String color;
 
     public Instant getNo() {
         return no;
@@ -49,7 +49,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         slingshotTexture = new Texture("Slingshot.png");
         birdSprite = new Sprite(birdTexture);
         slingshotSprite = new Sprite(slingshotTexture);
-        birdSprite.setSize(30, 50);
+        birdSprite.setSize(58, 65);
         slingshotSprite.setSize(80, 200);
         slingshotSprite.setOriginCenter();
         world = new World(new Vector2(0, -9.8f), true);
@@ -71,26 +71,33 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         setupInputProcessor();
     }
 
-    public Slingshot(World world,Stage stage,String bir,OrthographicCamera camera) {
+    public String getColor() {
+        return color;
+    }
+
+    public Slingshot(World world, Stage stage, String bir, OrthographicCamera camera, Main game) {
         this.camera = camera;
         batch = new SpriteBatch();
         this.world = world;
         this.stage = stage;
+        this.game = game;
         shapeRenderer = new ShapeRenderer();
         birdTexture = new Texture(bir+"_without.png");
+        this.color = bir;
         slingshotTexture = new Texture("Slingshot.png");
         birdSprite = new Sprite(birdTexture);
         slingshotSprite = new Sprite(slingshotTexture);
-        if(Objects.equals(bir, "black")){
-            birdSprite.setSize(40, 50);
+        if(bir == "black"){
+            birdSprite.setSize(58, 66);
         }
         else{
-            birdSprite.setSize(40, 40);
+            birdSprite.setSize(60, 60);
+
         }
-        slingshotSprite.setSize(60, 130);
+        slingshotSprite.setSize(80, 200);
         slingshotSprite.setOriginCenter();
         debugRenderer = new Box2DDebugRenderer();
-        sling = new Vector2(400, 320);
+        sling = new Vector2(400, 380);
         birdpos = new Vector2(sling);
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -101,7 +108,18 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 5f;
-        fixtureDef.friction = 0.1f;
+        fixtureDef.friction = 0.2f;
+        floorBody.createFixture(fixtureDef);
+        bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(17.3f, 0);
+        floorBody = world.createBody(bodyDef);
+        shape = new PolygonShape();
+        shape.setAsBox(1, 9);
+        fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 5f;
+        fixtureDef.friction = 0.2f;
         floorBody.createFixture(fixtureDef);
         createBirdBody();
         setupInputProcessor();
@@ -117,7 +135,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = 1f;
-        fixtureDef.restitution = 0.7f;
+        fixtureDef.restitution = 0.8f;
         fixtureDef.friction = 0.5f;
         bird.createFixture(fixtureDef);
         shape.dispose();
@@ -135,9 +153,8 @@ public class Slingshot extends ApplicationAdapter implements Screen {
                     return false;
                 }
                 curr = true;
-                if (dragPosition.dst(sling) > maxStretchDistance) {
-                    dragPosition = sling.cpy()
-                        .add(dragPosition.sub(sling).nor().scl(maxStretchDistance));
+                if (dragPosition.dst(sling) > 200) {
+                    dragPosition = sling.cpy().add(dragPosition.sub(sling).nor().scl(200));
                 }
                 birdpos.set(dragPosition);
                 return true;
@@ -157,6 +174,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
     }
 
     private void launchBird(Vector2 force) {
+        if (game.isSoundopen()) game.getBird().play();
         bird.setActive(true);
         bird.setTransform(birdpos.x / 100f, birdpos.y / 100f, 0);
         bird.setLinearVelocity(Vector2.Zero);
@@ -174,8 +192,8 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         birdSprite.setOriginCenter();
-        birdSprite.setRotation((float)Math.toDegrees(bird.getAngle()/2));
-        slingshotSprite.setPosition(sling.x-30, sling.y-100);
+        birdSprite.setRotation((float)Math.toDegrees(bird.getAngle()/4));
+        slingshotSprite.setPosition(sling.x-40, sling.y-170);
         slingshotSprite.draw(batch);
         if (!curr) {
             birdpos.set(bird.getPosition().x * 100f, bird.getPosition().y * 100f);
@@ -184,6 +202,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         birdSprite.draw(batch);
         batch.end();
         if (curr) {
+            game.getSlingshot().play();
             renderTrajectory();
         }
         debugRenderer.render(world, camera.combined);
@@ -201,8 +220,8 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         birdSprite.setOriginCenter();
-        birdSprite.setRotation((float)Math.toDegrees(bird.getAngle()/2));
-        slingshotSprite.setPosition(sling.x-30, sling.y-100);
+        birdSprite.setRotation((float)Math.toDegrees(bird.getAngle()/4));
+        slingshotSprite.setPosition(sling.x-40, sling.y-170);
         slingshotSprite.draw(batch);
         if (!curr) {
             birdpos.set(bird.getPosition().x * 100f, bird.getPosition().y * 100f);
@@ -211,6 +230,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         birdSprite.draw(batch);
         batch.end();
         if (curr) {
+            if (game.isSoundopen()) game.getSlingshot().play();
             renderTrajectory();
         }
         debugRenderer.render(world, camera.combined);
@@ -221,7 +241,10 @@ public class Slingshot extends ApplicationAdapter implements Screen {
 
     private void renderTrajectory() {
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.BLACK);
+        shapeRenderer.rectLine(new Vector2(birdpos.x+8, birdpos.y+8), new Vector2(sling.x-15,sling.y),10);
+        shapeRenderer.rectLine(new Vector2(birdpos.x+8, birdpos.y+8), new Vector2(sling.x+22,sling.y),10);
         shapeRenderer.setColor(Color.RED);
         Vector2 velocity = sling.cpy().sub(birdpos).scl(-6f);
         Vector2 position = sling.cpy();

@@ -3,9 +3,11 @@ package com.AngryBirds;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,14 +42,17 @@ public class LevelPassed extends Main implements Screen {
     private Texture restart2;
     private Image restart2Image;
     private int stars;
+    private BitmapFont font;
+    private int score;
 
     private boolean paused,exited=false,restarting=false,nextc=false;
 
-    public LevelPassed(Main game,int stars) {
+    public LevelPassed(Main game,int stars,int score) {
         this.game = game;
         if (stars<=1) this.stars=1000;
         else if (stars==2) this.stars=2000;
         else this.stars=3000;
+        this.score=score;
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new StretchViewport(1600, 900, camera);
@@ -66,6 +71,9 @@ public class LevelPassed extends Main implements Screen {
         nextImage.setPosition(720,150);
         restart2Image.setSize(100,100);
         restart2Image.setPosition(920,150);
+        font = new BitmapFont();
+        font.setColor(Color.GREEN);
+        font.getData().setScale(3);
         menuImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Menu clicked");
@@ -111,6 +119,7 @@ public class LevelPassed extends Main implements Screen {
         else {
             batch.draw(new Texture("slingshot.png"),370,210,80,200);
             batch.draw(passedbackground,0,0,1600,900);
+            font.draw(batch, "Score: "+this.score, 650, 620);
             if (Duration.between(start,Instant.now()).toMillis()>1000) {
                 batch.draw(star,620,287,72,76);
             }

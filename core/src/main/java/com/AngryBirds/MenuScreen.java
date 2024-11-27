@@ -213,7 +213,7 @@ public class MenuScreen extends Main implements Screen {
             game.setScreen(new ExitPage(game));
         }
         else if (saveopen) {
-            game.setScreen(new SavingPage(game));
+            game.setScreen(game.level);
         }
         else {
             musicoffImage.remove();

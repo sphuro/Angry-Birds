@@ -8,7 +8,8 @@ import static java.lang.Math.max;
 
 public class CheckCollision implements ContactListener {
 
-    private World world; // Reference to the world
+    private World world;
+    private Main game;
     private ArrayList<Body> todestroy = new ArrayList<>();
     private ArrayList<Body> destroyed = new ArrayList<>();
 
@@ -20,8 +21,9 @@ public class CheckCollision implements ContactListener {
         return destroyed;
     }
 
-    public CheckCollision(World world) {
+    public CheckCollision(World world,Main game) {
         this.world = world;
+        this.game = game;
     }
 
     @Override
@@ -44,35 +46,22 @@ public class CheckCollision implements ContactListener {
         for (float normalImpulse : impulse.getNormalImpulses()) {
             mx = max(mx,normalImpulse);
         }
-        float need=0.7f;
-        if (fixtureA.getUserData() instanceof KingPig) need = 0.6f;
-        else if (fixtureA.getUserData() instanceof Pig) need = 0.4f;
-        else if (fixtureA.getUserData() instanceof Box) need = 0.7f;
-        else if (fixtureA.getUserData() instanceof Log) need = 0.4f;
-        else if (fixtureA.getUserData() instanceof HelmetPig) need = 0.5f;
-        else if (fixtureA.getUserData() instanceof Stonebox) need = 1;
-        else if (fixtureA.getUserData() instanceof GlassBox) need = 0.5f;
-        else if (fixtureA.getUserData() instanceof StoneLog) need = 1;
-        float need2=0.7f;
-        if (fixtureA.getUserData() instanceof KingPig) need2 = 0.6f;
-        else if (fixtureA.getUserData() instanceof Pig) need2 = 0.4f;
-        else if (fixtureA.getUserData() instanceof Box) need2 = 0.7f;
-        else if (fixtureA.getUserData() instanceof Log) need2 = 0.4f;
-        else if (fixtureA.getUserData() instanceof HelmetPig) need2 = 0.5f;
-        else if (fixtureA.getUserData() instanceof Stonebox) need2 = 1;
-        else if (fixtureA.getUserData() instanceof GlassBox) need2 = 0.5f;
-        else if (fixtureA.getUserData() instanceof StoneLog) need2 = 1;
-
-        if (mx > 0.4f) {
-            if (fixtureA.getUserData() instanceof Materials && mx>need) {
-                Materials objA = (Materials) fixtureA.getUserData();
-                objA.destroy();
-                todestroy.add(objA.getbody());
-            }
-            if (fixtureB.getUserData() instanceof Materials && mx>need2) {
-                Materials objB = (Materials) fixtureB.getUserData();
+        if (fixtureB.getUserData() instanceof Materials && mx>0.4f) {
+            Materials objB = (Materials) fixtureB.getUserData();
+            if (objB.gethealth()<=mx*100 && game.isSoundopen()) game.getPig().play();
+            objB.sethealth((int) (objB.gethealth()-mx*10));
+            if (objB.gethealth()<=0) {
                 objB.destroy();
                 todestroy.add(objB.getbody());
+            }
+        }
+        if (fixtureA.getUserData() instanceof Materials && mx>0.4f) {
+            Materials objA = (Materials) fixtureA.getUserData();
+            if (objA.gethealth()<=mx*100 && game.isSoundopen()) game.getPig().play();
+            objA.sethealth((int) (objA.gethealth()-mx*100));
+            if (objA.gethealth()<=0) {
+                objA.destroy();
+                todestroy.add(objA.getbody());
             }
         }
     }

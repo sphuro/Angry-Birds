@@ -25,10 +25,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 import static java.lang.Math.max;
 
-public class Leveltwo extends Main implements Screen {
+public class RandomLevel extends Main implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Stage stage;
@@ -55,10 +56,10 @@ public class Leveltwo extends Main implements Screen {
     private PauseScreen ne;
     private LevelPassed pa;
     private LevelFailed fa;
-    private RedBird slingshot;
-    private BlackBird first;
-    private BlueBird second;
-    private RedBird third;
+    private Bird slingshot;
+    private Bird first;
+    private Bird second;
+    private Bird third;
     private LevelStructure structure;
     private Slingshot sling;
     private World world;
@@ -71,9 +72,7 @@ public class Leveltwo extends Main implements Screen {
 
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false;
 
-    public Leveltwo(Main game) {
-        System.out.println(game.getScores().get(1));
-        System.out.println(game.getStars().get(1));
+    public RandomLevel(Main game) {
         this.game = game;
         world = new World(new Vector2(0,-9.8f), true);
         batch = new SpriteBatch();
@@ -81,8 +80,6 @@ public class Leveltwo extends Main implements Screen {
         sling = new Slingshot(world,stage,"black",camera,game);
         viewport = new StretchViewport(1600, 900, camera);
         stage = new Stage(viewport, batch);
-        background = new Texture("leveltwobackground.png");
-        backgroundImage = new Image(background);
         blocks = new Texture("leveloneblocks.png");
         blocksImage = new Image(blocks);
         blocksImage.setSize(617*0.75f,512*0.75f);
@@ -115,34 +112,70 @@ public class Leveltwo extends Main implements Screen {
         exitImage.setPosition(50,150);
         pauseImage.setSize(80,80);
         pauseImage.setPosition(50,750);
-        slingshot=new RedBird(game);
-        first=new BlackBird(game);
-        second=new BlueBird(game);
-        third=new RedBird(game);
-        birdy = Instant.now();
+        Random random = new Random();
         birds = new ArrayList<>();
-        birds.add(new Slingshot(world,stage,"black",camera,game));
-        birds.add(new Slingshot(world,stage,"red",camera,game));
-        birds.add(new Slingshot(world,stage,"blue",camera,game));
-        birds.add(new Slingshot(world,stage,"black",camera,game));
+        for (int i=0;i<4;i++) {
+            int curr = random.nextInt(4);
+            String temp;
+            if (curr==0) temp = "blue";
+            else if (curr==1) temp = "red";
+            else if (curr==2) temp = "yellow";
+            else temp = "black";
+            birds.add(new Slingshot(world,stage,temp,camera,game));
+        }
+        if (Objects.equals(birds.get(3).getColor(), "red"))  first = new RedBird(game);
+        if (Objects.equals(birds.get(3).getColor(), "blue"))  first = new BlueBird(game);
+        if (Objects.equals(birds.get(3).getColor(), "yellow"))  first = new YellowBird(game);
+        if (Objects.equals(birds.get(3).getColor(), "black"))  first = new BlackBird(game);
+        if (Objects.equals(birds.get(2).getColor(), "red"))  second = new RedBird(game);
+        if (Objects.equals(birds.get(2).getColor(), "blue"))  second = new BlueBird(game);
+        if (Objects.equals(birds.get(2).getColor(), "yellow"))  second = new YellowBird(game);
+        if (Objects.equals(birds.get(2).getColor(), "black"))  second = new BlackBird(game);
+        if (Objects.equals(birds.get(1).getColor(), "red"))  third = new RedBird(game);
+        if (Objects.equals(birds.get(1).getColor(), "blue"))  third = new BlueBird(game);
+        if (Objects.equals(birds.get(1).getColor(), "yellow"))  third = new YellowBird(game);
+        if (Objects.equals(birds.get(1).getColor(), "black"))  third = new BlackBird(game);
+//        slingshot=new RedBird(game);
+//        first=new YellowBird(game);
+//        second=new RedBird(game);
+//        third=new BlackBird(game);
+//        birdy = Instant.now();
+//        birds = new ArrayList<>();
+//        birds.add(new Slingshot(world,stage,"blue",camera,game));
+//        birds.add(new Slingshot(world,stage,"black",camera,game));
+//        birds.add(new Slingshot(world,stage,"red",camera,game));
+//        birds.add(new Slingshot(world,stage,"yellow",camera,game));
         structure=new LevelStructure(game,world,camera);
-        structure.add("box",1050,220,81,81);
-        structure.add("stonebox",1131,220,81,81);
-        structure.add("box",1212,220,81,81);
-        structure.add("box",1293,220,81,81);
-        structure.add("stonebox",1293,301,81,81);
-        structure.add("box",1050,301,81,81);
-        structure.add("box",1131,301,81,81);
-        structure.add("glassbox",1131,382,81,81);
-        structure.add("log",1050,401,162,19);
-        structure.add("box",969,220,81,81);
-        structure.add("box",969,301,81,81);
-        structure.add("glassbox",969,382,81,81);
-        structure.add("stonebox",1050,463,81,81);
-        structure.add("helmetpig",969,430,60,60);
-        structure.add("helmetpig",1293,349,60,60);
-        structure.add("pig",1212,268,60,60);
-        structure.add("kingpig",1050,349,75,75);
+        random = new Random();
+        int ba = random.nextInt(3);
+        if (ba==0) background = new Texture("levelonebackground.png");
+        else if (ba==1) background = new Texture("leveltwobackground.png");
+        else background = new Texture("levelthreebackground.png");
+        backgroundImage = new Image(background);
+        int rows = random.nextInt(5) + 3;
+        String[] blockTypes = {"box", "stonebox", "glassbox"};
+        String[] pigTypes = {"pig", "helmetpig", "kingpig"};
+        boolean kingPigPlaced = false;
+
+        for (int i = 0; i < rows; i++) {
+            int height = (random.nextInt(5) + 3) * 81;
+
+            for (int j = 0; j < height / 81; j++) {
+                String blockType = blockTypes[random.nextInt(blockTypes.length)];
+                structure.add(blockType, 900 + i * 100, 220 + j * 81, 81, 81);
+            }
+
+            String pigType;
+            if (!kingPigPlaced && i == rows - 1) {
+                pigType = "kingpig";
+                kingPigPlaced = true;
+            } else {
+                pigType = pigTypes[random.nextInt(pigTypes.length - 1)];
+            }
+
+            structure.add(pigType, 900 + i * 100, 220 + height, 48, 48);
+        }
+
         pauseImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Pause clicked");
@@ -216,7 +249,6 @@ public class Leveltwo extends Main implements Screen {
             if (birds.size()<=1) curr = 1;
             else if (birds.size()==2) curr = 2;
             else curr = 3;
-            game.getStars().set(1,max(curr,game.getStars().get(1)));
             pa = new LevelPassed(game,birds.size(),structure.calculate_score());
             passed=true;
         }
@@ -228,10 +260,10 @@ public class Leveltwo extends Main implements Screen {
             game.setScreen(new MenuScreen(game));
         }
         else if (restarting) {
-            game.setScreen(new Leveltwo(game));
+            game.setScreen(new RandomLevel(game));
         }
         else if (nextc) {
-            game.setScreen(new Levelthree(game));
+            game.setScreen(new RandomLevel(game));
         }
         else if (paused) {
             blocksImage.remove();
@@ -250,7 +282,7 @@ public class Leveltwo extends Main implements Screen {
             String out = ne.draw();
             if (Objects.equals(out, "paused")) paused=false;
             else if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
-            else if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
+            else if (Objects.equals(out, "restart")) game.setScreen(new RandomLevel(game));
         }
         else if (failed) {
             musicoffImage.remove();
@@ -270,7 +302,7 @@ public class Leveltwo extends Main implements Screen {
             structure.draw();
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = fa.draw();
-            if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
+            if (Objects.equals(out, "restart")) game.setScreen(new RandomLevel(game));
             else if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
         }
         else if (passed) {
@@ -292,8 +324,8 @@ public class Leveltwo extends Main implements Screen {
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = pa.draw();
             if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
-            else if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
-            else if (Objects.equals(out, "next")) game.setScreen(new Levelthree(game));
+            else if (Objects.equals(out, "restart")) game.setScreen(new RandomLevel(game));
+            else if (Objects.equals(out, "next")) game.setScreen(new RandomLevel(game));
         }
         else {
             musicoffImage.remove();
@@ -317,8 +349,8 @@ public class Leveltwo extends Main implements Screen {
                 if (birds.size()<=1) curr = 1;
                 else if (birds.size()==2) curr = 2;
                 else curr = 3;
-                game.getStars().set(1,max(curr,game.getStars().get(1)));
-                game.getScores().set(1,max(structure.calculate_score(),game.getScores().get(1)));
+                game.getStars().set(2,max(curr,game.getStars().get(2)));
+                game.getScores().set(2,max(structure.calculate_score(),game.getScores().get(2)));
                 pa = new LevelPassed(game,birds.size(),structure.calculate_score());
                 passed=true;
             }

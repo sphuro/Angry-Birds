@@ -45,8 +45,10 @@ public class PauseScreen extends Main implements Screen {
     private Texture exit;
     private Image exitImage;
     private Texture pausebackground;
+    private Texture save;
+    private Image saveImage;
 
-    private boolean paused,exited=false,restarting=false,nextc=false;
+    private boolean paused,exited=false,restarting=false,nextc=false,saved=false;
 
     public PauseScreen(Main game) {
         this.game = game;
@@ -82,6 +84,10 @@ public class PauseScreen extends Main implements Screen {
         exitImage.setPosition(50,150);
         pauseImage.setSize(80,80);
         pauseImage.setPosition(50,750);
+        save = new Texture("save2.png");
+        saveImage = new Image(save);
+        saveImage.setSize(80,80);
+        saveImage.setPosition(50,20);
         pausebackground=new Texture("pausebackground.png");
         pauseImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -125,6 +131,12 @@ public class PauseScreen extends Main implements Screen {
                 exited=!exited;
             }
         });
+        saveImage.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Save clicked");
+                saved=!saved;
+            }
+        });
 
     }
     @Override
@@ -143,6 +155,7 @@ public class PauseScreen extends Main implements Screen {
         stage.addActor(exitImage);
         stage.addActor(musicoffImage);
         stage.addActor(soundoffImage);
+        stage.addActor(saveImage);
         Gdx.input.setInputProcessor(stage);
         if (exited) {
             return "exit";
@@ -157,6 +170,9 @@ public class PauseScreen extends Main implements Screen {
             paused=false;
             return "paused";
         }
+        else if (saved) {
+            return "saved";
+        }
         else {
             batch.draw(pausebackground,0,0,214,900);
             batch.draw(pause,50,750,80,80);
@@ -166,6 +182,7 @@ public class PauseScreen extends Main implements Screen {
             else batch.draw(soundoff,50,450,80,80);
             batch.draw(restart,50,300,80,80);
             batch.draw(exit,50,150,80,80);
+            batch.draw(save,50,20,80,80);
         }
         batch.end();
         return "none";

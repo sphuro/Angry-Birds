@@ -5,7 +5,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.AngryBirds.Main;
 
-/** Launches the desktop (LWJGL2) application. */
 public class Lwjgl2Launcher {
     public static void main(String[] args) {
         createApplication();
@@ -18,8 +17,8 @@ public class Lwjgl2Launcher {
     private static LwjglApplicationConfiguration getDefaultConfiguration() {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
         configuration.title = "AngryBirds";
-        configuration.width = 640;
-        configuration.height = 480;
+        configuration.width = 1600;
+        configuration.height = 900;
         //// This prevents a confusing error that would appear after exiting normally.
         configuration.forceExit = false;
 

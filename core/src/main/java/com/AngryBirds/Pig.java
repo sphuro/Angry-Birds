@@ -20,8 +20,8 @@ public class Pig extends Main implements Screen,Materials {
     private Viewport viewport;
     private Main game;
     private Texture log;
+    private Texture logb;
     float x,y,width,height;
-    private Body logb;
     private ShapeRenderer shapeRenderer;
     private float PPM;
     private World world;
@@ -29,14 +29,15 @@ public class Pig extends Main implements Screen,Materials {
     private float density;
     private float restitution;
     private float friction;
-    private float healthPoint;
     private Body body;
     private BodyDef bodyDef;
     private FixtureDef fixtureDef;
     private Sprite block_sprite;
     private Box2DDebugRenderer debugRenderer;
+    private int initial_health = 100;
+    private int health = initial_health;
 
-    public Pig(Main game,float x,float y,float width,float height,World world,OrthographicCamera camera) {
+    public Pig(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
         debugRenderer = new Box2DDebugRenderer();
@@ -46,6 +47,7 @@ public class Pig extends Main implements Screen,Materials {
         viewport = new StretchViewport(1600, 900, camera);
         stage = new Stage(viewport, batch);
         log = new Texture("pig.png");
+        logb = new Texture("pigb.png");
         this.x = x;
         this.y = y;
         this.width = width;
@@ -53,7 +55,6 @@ public class Pig extends Main implements Screen,Materials {
         density = 0.5f;
         restitution = 0.5f;
         friction = 10f;
-        healthPoint = 200f;
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x/100, y/100);
@@ -68,16 +69,42 @@ public class Pig extends Main implements Screen,Materials {
         fixture.setUserData(this);
         create();
     }
-    public boolean isDestroyed() {
-        return destroyed;
+    public int getInitial_health() {
+        return initial_health;
+    }
+
+    public void setInitial_health(int initial_health) {
+        this.initial_health = initial_health;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
     @Override
     public void show() {
 
     }
 
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
     public Body getbody() {
         return body;
+    }
+
+    @Override
+    public int gethealth() {
+        return health;
+    }
+
+    @Override
+    public void sethealth(int health) {
+        this.health = health;
     }
 
     public void destroy() {
@@ -89,7 +116,8 @@ public class Pig extends Main implements Screen,Materials {
         viewport.apply();
         batch.begin();
         Vector2 position = body.getPosition();
-        batch.draw(log, (position.x * 100)-width/2, (position.y * 100)-height/2, width, height);
+        if (this.health*2>this.initial_health) batch.draw(log, (position.x * 100)-width/2, (position.y * 100)-height/2, width, height);
+        else batch.draw(logb, (position.x * 100)-width/2, (position.y * 100)-height/2, width, height);
         batch.end();
         debugRenderer.render(world, camera.combined);
     }

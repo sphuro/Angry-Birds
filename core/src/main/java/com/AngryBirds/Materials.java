@@ -22,4 +22,8 @@ public interface Materials {
     void destroy();
 
     Body getbody();
+
+    int gethealth();
+
+    void sethealth(int health);
 }

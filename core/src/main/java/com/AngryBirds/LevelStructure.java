@@ -171,4 +171,33 @@ public class LevelStructure extends Main implements Screen {
         batch.dispose();
         stage.dispose();
     }
+
+    public int calculate_score() {
+        int ans = 0;
+        for (Log i:logs) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (Box i:boxes) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (Pig i:pigs) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (KingPig i:kingpigs) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (HelmetPig i:helmetPigs) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (Stonebox i:stonebox) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (StoneLog i:stonelog) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        for (GlassBox i:glassbox) {
+            ans+=i.getInitial_health()-i.gethealth();
+        }
+        return ans;
+    }
 }
