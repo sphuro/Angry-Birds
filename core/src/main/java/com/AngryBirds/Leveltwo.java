@@ -69,7 +69,7 @@ public class Leveltwo extends Main implements Screen {
     private CheckCollision lis;
     private Instant noo;
 
-    private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false;
+    private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false,saved=false;
 
     public Leveltwo(Main game) {
         System.out.println(game.getScores().get(1));
@@ -233,6 +233,90 @@ public class Leveltwo extends Main implements Screen {
         else if (nextc) {
             game.setScreen(new Levelthree(game));
         }
+        else if (saved) {
+            paused = false;
+            game.gameContainer = new Container();
+            game.gameContainer.setLevel(2);
+            for (Log i:structure.getLogs()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getLog().add(toadd);
+            }
+            for (Box i: structure.getBoxes()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getBox().add(toadd);
+            }
+            for (Pig i:structure.getPigs()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getPig().add(toadd);
+            }
+            for (KingPig i: structure.getKingpigs()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getKingpig().add(toadd);
+            }
+            for (HelmetPig i:structure.getHelmetPigs()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getHelmetpig().add(toadd);
+            }
+            for (Stonebox i: structure.getStonebox()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getStonebox().add(toadd);
+            }
+            for (StoneLog i: structure.getStonelog()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getStonelog().add(toadd);
+            }
+            for (GlassBox i: structure.getGlassbox()) {
+                ArrayList<Float> toadd = new ArrayList<>();
+                toadd.add(i.getbody().getPosition().x);
+                toadd.add(i.getbody().getPosition().y);
+                toadd.add(i.width);
+                toadd.add(i.height);
+                toadd.add((float)i.gethealth());
+                game.gameContainer.getGlassbox().add(toadd);
+            }
+            int curr = birds.size();
+            if (curr>0 && birds.get(0).isDestroyed()) {
+                curr--;
+            }
+            game.gameContainer.setBirds(curr);
+            saved = false;
+            game.setScreen(new SavingPage(game));
+        }
         else if (paused) {
             blocksImage.remove();
             batch.draw(background, 0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
@@ -251,6 +335,7 @@ public class Leveltwo extends Main implements Screen {
             if (Objects.equals(out, "paused")) paused=false;
             else if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
             else if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
+            else if (Objects.equals(out,"saved")) saved = true;
         }
         else if (failed) {
             musicoffImage.remove();

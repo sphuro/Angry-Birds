@@ -200,4 +200,36 @@ public class LevelStructure extends Main implements Screen {
         }
         return ans;
     }
+
+    public ArrayList<Box> getBoxes() {
+        return boxes;
+    }
+
+    public ArrayList<Log> getLogs() {
+        return logs;
+    }
+
+    public ArrayList<Pig> getPigs() {
+        return pigs;
+    }
+
+    public ArrayList<KingPig> getKingpigs() {
+        return kingpigs;
+    }
+
+    public ArrayList<HelmetPig> getHelmetPigs() {
+        return helmetPigs;
+    }
+
+    public ArrayList<Stonebox> getStonebox() {
+        return stonebox;
+    }
+
+    public ArrayList<StoneLog> getStonelog() {
+        return stonelog;
+    }
+
+    public ArrayList<GlassBox> getGlassbox() {
+        return glassbox;
+    }
 }

@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import static java.lang.Math.max;
 
-public class Levelone extends Main implements Screen {
+public class Leveltwoload extends Main implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Stage stage;
@@ -56,9 +56,9 @@ public class Levelone extends Main implements Screen {
     private LevelPassed pa;
     private LevelFailed fa;
     private RedBird slingshot;
-    private YellowBird first;
-    private RedBird second;
-    private BlackBird third;
+    private BlackBird first;
+    private BlueBird second;
+    private RedBird third;
     private LevelStructure structure;
     private Slingshot sling;
     private World world;
@@ -68,13 +68,12 @@ public class Levelone extends Main implements Screen {
     private boolean setted = false;
     private CheckCollision lis;
     private Instant noo;
-    private static int score = 0;
 
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false,saved=false;
 
-    public Levelone(Main game) {
-        System.out.println(game.getScores().get(0));
-        System.out.println(game.getStars().get(0));
+    public Leveltwoload(Main game,Container container) {
+        System.out.println(game.getScores().get(1));
+        System.out.println(game.getStars().get(1));
         this.game = game;
         world = new World(new Vector2(0,-9.8f), true);
         batch = new SpriteBatch();
@@ -82,7 +81,7 @@ public class Levelone extends Main implements Screen {
         sling = new Slingshot(world,stage,"black",camera,game);
         viewport = new StretchViewport(1600, 900, camera);
         stage = new Stage(viewport, batch);
-        background = new Texture("levelonebackground.png");
+        background = new Texture("leveltwobackground.png");
         backgroundImage = new Image(background);
         blocks = new Texture("leveloneblocks.png");
         blocksImage = new Image(blocks);
@@ -117,31 +116,91 @@ public class Levelone extends Main implements Screen {
         pauseImage.setSize(80,80);
         pauseImage.setPosition(50,750);
         slingshot=new RedBird(game);
-        first=new YellowBird(game);
-        second=new RedBird(game);
-        third=new BlackBird(game);
+        first=new BlackBird(game);
+        second=new BlueBird(game);
+        third=new RedBird(game);
         birdy = Instant.now();
         birds = new ArrayList<>();
-        birds.add(new Slingshot(world,stage,"blue",camera,game));
         birds.add(new Slingshot(world,stage,"black",camera,game));
         birds.add(new Slingshot(world,stage,"red",camera,game));
-        birds.add(new Slingshot(world,stage,"yellow",camera,game));
+        birds.add(new Slingshot(world,stage,"blue",camera,game));
+        birds.add(new Slingshot(world,stage,"black",camera,game));
+        for (int i=container.getBirds();i<4;i++) {
+            birds.remove(0);
+        }
         structure=new LevelStructure(game,world,camera);
-        structure.add("box",1050,220,81,81);
-        structure.add("stonebox",1131,220,81,81);
-        structure.add("box",1212,220,81,81);
-        structure.add("box",1050,301,81,81);
-        structure.add("box",1131,301,81,81);
-        structure.add("glassbox",1131,382,81,81);
-        structure.add("log",1050,401,162,19);
-        structure.add("box",969,220,81,81);
-        structure.add("box",969,301,81,81);
-        structure.add("stonebox",969,382,81,81);
-        structure.add("stonebox",1050,463,81,81);
-        structure.add("helmetpig",969,430,60,60);
-        structure.add("pig",1212,268,60,60);
-        structure.add("pig",1050,349,60,60);
-        structure.add("kingpig",1050,535,75,72);
+        for (ArrayList<Float> i:container.getLog()) {
+            structure.add("log",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getLogs().get(structure.getLogs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getLogs().get(structure.getLogs().size()-1).getbody());
+        }
+        for (ArrayList<Float> i:container.getBox()) {
+            structure.add("box",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getBoxes().get(structure.getBoxes().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getBoxes().get(structure.getBoxes().size()-1).getbody());
+        }
+        for (ArrayList<Float> i:container.getPig()) {
+            structure.add("pig",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getPigs().get(structure.getPigs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getPigs().get(structure.getPigs().size()-1).getbody());
+        }
+//        for (Pig i:pigs) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getKingpig()) {
+            structure.add("kingpig",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getKingpigs().get(structure.getKingpigs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getKingpigs().get(structure.getKingpigs().size()-1).getbody());
+        }
+//        for (KingPig i:kingpigs) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getHelmetpig()) {
+            structure.add("helmetpig",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getHelmetPigs().get(structure.getHelmetPigs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getHelmetPigs().get(structure.getHelmetPigs().size()-1).getbody());
+        }
+//        for (HelmetPig i:helmetPigs) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getStonebox()) {
+            structure.add("stonebox",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getStonebox().get(structure.getStonebox().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getStonebox().get(structure.getStonebox().size()-1).getbody());
+        }
+//        for (Stonebox i:stonebox) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getStonelog()) {
+            structure.add("stonelog",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getStonelog().get(structure.getStonelog().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getStonelog().get(structure.getStonelog().size()-1).getbody());
+        }
+//        for (StoneLog i:stonelog) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getGlassbox()) {
+            structure.add("glassbox",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getGlassbox().get(structure.getGlassbox().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getGlassbox().get(structure.getGlassbox().size()-1).getbody());
+        }
+//        structure.add("box",1050,220,81,81);
+//        structure.add("stonebox",1131,220,81,81);
+//        structure.add("box",1212,220,81,81);
+//        structure.add("box",1293,220,81,81);
+//        structure.add("stonebox",1293,301,81,81);
+//        structure.add("box",1050,301,81,81);
+//        structure.add("box",1131,301,81,81);
+//        structure.add("glassbox",1131,382,81,81);
+//        structure.add("log",1050,401,162,19);
+//        structure.add("box",969,220,81,81);
+//        structure.add("box",969,301,81,81);
+//        structure.add("glassbox",969,382,81,81);
+//        structure.add("stonebox",1050,463,81,81);
+//        structure.add("helmetpig",969,430,60,60);
+//        structure.add("helmetpig",1293,349,60,60);
+//        structure.add("pig",1212,268,60,60);
+//        structure.add("kingpig",1050,349,75,75);
         pauseImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Pause clicked");
@@ -215,8 +274,7 @@ public class Levelone extends Main implements Screen {
             if (birds.size()<=1) curr = 1;
             else if (birds.size()==2) curr = 2;
             else curr = 3;
-            game.getStars().set(0,max(curr,game.getStars().get(0)));
-            game.getScores().set(0,max(structure.calculate_score(),game.getScores().get(0)));
+            game.getStars().set(1,max(curr,game.getStars().get(1)));
             pa = new LevelPassed(game,birds.size(),structure.calculate_score());
             passed=true;
         }
@@ -228,15 +286,15 @@ public class Levelone extends Main implements Screen {
             game.setScreen(new MenuScreen(game));
         }
         else if (restarting) {
-            game.setScreen(new Levelone(game));
+            game.setScreen(new Leveltwo(game));
         }
         else if (nextc) {
-            game.setScreen(new Leveltwo(game));
+            game.setScreen(new Levelthree(game));
         }
         else if (saved) {
             paused = false;
             game.gameContainer = new Container();
-            game.gameContainer.setLevel(1);
+            game.gameContainer.setLevel(2);
             for (Log i:structure.getLogs()) {
                 ArrayList<Float> toadd = new ArrayList<>();
                 toadd.add(i.getbody().getPosition().x);
@@ -334,7 +392,7 @@ public class Levelone extends Main implements Screen {
             String out = ne.draw();
             if (Objects.equals(out, "paused")) paused=false;
             else if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
-            else if (Objects.equals(out, "restart")) game.setScreen(new Levelone(game));
+            else if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
             else if (Objects.equals(out,"saved")) saved = true;
         }
         else if (failed) {
@@ -355,7 +413,7 @@ public class Levelone extends Main implements Screen {
             structure.draw();
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = fa.draw();
-            if (Objects.equals(out, "restart")) game.setScreen(new Levelone(game));
+            if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
             else if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
         }
         else if (passed) {
@@ -377,8 +435,8 @@ public class Levelone extends Main implements Screen {
 //            batch.draw(birds, 180, 230, 104, 42);
             String out = pa.draw();
             if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
-            else if (Objects.equals(out, "restart")) game.setScreen(new Levelone(game));
-            else if (Objects.equals(out, "next")) game.setScreen(new Leveltwo(game));
+            else if (Objects.equals(out, "restart")) game.setScreen(new Leveltwo(game));
+            else if (Objects.equals(out, "next")) game.setScreen(new Levelthree(game));
         }
         else {
             musicoffImage.remove();
@@ -402,8 +460,8 @@ public class Levelone extends Main implements Screen {
                 if (birds.size()<=1) curr = 1;
                 else if (birds.size()==2) curr = 2;
                 else curr = 3;
-                game.getStars().set(0,max(curr,game.getStars().get(0)));
-                game.getScores().set(0,max(structure.calculate_score(),game.getScores().get(0)));
+                game.getStars().set(1,max(curr,game.getStars().get(1)));
+                game.getScores().set(1,max(structure.calculate_score(),game.getScores().get(1)));
                 pa = new LevelPassed(game,birds.size(),structure.calculate_score());
                 passed=true;
             }

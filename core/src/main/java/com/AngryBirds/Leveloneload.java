@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import org.w3c.dom.Text;
 
 import javax.swing.event.ChangeListener;
+import java.sql.Struct;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import java.util.Objects;
 
 import static java.lang.Math.max;
 
-public class Levelone extends Main implements Screen {
+public class Leveloneload extends Main implements Screen {
     private SpriteBatch batch;
     private OrthographicCamera camera;
     private Stage stage;
@@ -72,7 +73,7 @@ public class Levelone extends Main implements Screen {
 
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false,saved=false;
 
-    public Levelone(Main game) {
+    public Leveloneload(Main game, Container container) {
         System.out.println(game.getScores().get(0));
         System.out.println(game.getStars().get(0));
         this.game = game;
@@ -126,22 +127,83 @@ public class Levelone extends Main implements Screen {
         birds.add(new Slingshot(world,stage,"black",camera,game));
         birds.add(new Slingshot(world,stage,"red",camera,game));
         birds.add(new Slingshot(world,stage,"yellow",camera,game));
+        for (int i=container.getBirds();i<4;i++) {
+            birds.remove(0);
+        }
         structure=new LevelStructure(game,world,camera);
-        structure.add("box",1050,220,81,81);
-        structure.add("stonebox",1131,220,81,81);
-        structure.add("box",1212,220,81,81);
-        structure.add("box",1050,301,81,81);
-        structure.add("box",1131,301,81,81);
-        structure.add("glassbox",1131,382,81,81);
-        structure.add("log",1050,401,162,19);
-        structure.add("box",969,220,81,81);
-        structure.add("box",969,301,81,81);
-        structure.add("stonebox",969,382,81,81);
-        structure.add("stonebox",1050,463,81,81);
-        structure.add("helmetpig",969,430,60,60);
-        structure.add("pig",1212,268,60,60);
-        structure.add("pig",1050,349,60,60);
-        structure.add("kingpig",1050,535,75,72);
+        for (ArrayList<Float> i:container.getLog()) {
+            structure.add("log",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getLogs().get(structure.getLogs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getLogs().get(structure.getLogs().size()-1).getbody());
+        }
+        for (ArrayList<Float> i:container.getBox()) {
+            structure.add("box",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getBoxes().get(structure.getBoxes().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getBoxes().get(structure.getBoxes().size()-1).getbody());
+        }
+        for (ArrayList<Float> i:container.getPig()) {
+            structure.add("pig",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getPigs().get(structure.getPigs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getPigs().get(structure.getPigs().size()-1).getbody());
+        }
+//        for (Pig i:pigs) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getKingpig()) {
+            structure.add("kingpig",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getKingpigs().get(structure.getKingpigs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getKingpigs().get(structure.getKingpigs().size()-1).getbody());
+        }
+//        for (KingPig i:kingpigs) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getHelmetpig()) {
+            structure.add("helmetpig",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getHelmetPigs().get(structure.getHelmetPigs().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getHelmetPigs().get(structure.getHelmetPigs().size()-1).getbody());
+        }
+//        for (HelmetPig i:helmetPigs) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getStonebox()) {
+            structure.add("stonebox",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getStonebox().get(structure.getStonebox().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getStonebox().get(structure.getStonebox().size()-1).getbody());
+        }
+//        for (Stonebox i:stonebox) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getStonelog()) {
+            structure.add("stonelog",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getStonelog().get(structure.getStonelog().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getStonelog().get(structure.getStonelog().size()-1).getbody());
+        }
+//        for (StoneLog i:stonelog) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+        for (ArrayList<Float> i:container.getGlassbox()) {
+            structure.add("glassbox",i.get(0)*100,i.get(1)*100,i.get(2),i.get(3));
+            structure.getGlassbox().get(structure.getGlassbox().size()-1).setHealth((int)(i.get(4)/1));
+            if (i.get(4)<=0) world.destroyBody(structure.getGlassbox().get(structure.getGlassbox().size()-1).getbody());
+        }
+//        for (GlassBox i:glassbox) {
+//            ans+=i.getInitial_health()-i.gethealth();
+//        }
+//        structure.add("box",1050,220,81,81);
+//        structure.add("stonebox",1131,220,81,81);
+//        structure.add("box",1212,220,81,81);
+//        structure.add("box",1050,301,81,81);
+//        structure.add("box",1131,301,81,81);
+//        structure.add("glassbox",1131,382,81,81);
+//        structure.add("log",1050,401,162,19);
+//        structure.add("box",969,220,81,81);
+//        structure.add("box",969,301,81,81);
+//        structure.add("stonebox",969,382,81,81);
+//        structure.add("stonebox",1050,463,81,81);
+//        structure.add("helmetpig",969,430,60,60);
+//        structure.add("pig",1212,268,60,60);
+//        structure.add("pig",1050,349,60,60);
+//        structure.add("kingpig",1050,535,75,72);
         pauseImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Pause clicked");

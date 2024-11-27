@@ -23,9 +23,9 @@ public class Main extends Game {
     private boolean musicopen=true,soundopen=true;
     private ArrayList<Integer> scores=new ArrayList<>();
     private ArrayList<Integer> stars=new ArrayList<>();
-    Levelone level;
     private Music bird;
     private Music pig;
+    Container gameContainer;
 
     public Music getSlingshot() {
         return slingshot;

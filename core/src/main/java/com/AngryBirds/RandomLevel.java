@@ -139,7 +139,7 @@ public class RandomLevel extends Main implements Screen {
 //        first=new YellowBird(game);
 //        second=new RedBird(game);
 //        third=new BlackBird(game);
-//        birdy = Instant.now();
+        birdy = Instant.now();
 //        birds = new ArrayList<>();
 //        birds.add(new Slingshot(world,stage,"blue",camera,game));
 //        birds.add(new Slingshot(world,stage,"black",camera,game));

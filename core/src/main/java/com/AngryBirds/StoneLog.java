@@ -108,7 +108,7 @@ public class StoneLog extends Main implements Screen,Materials {
     }
 
     public void draw() {
-        if (destroyed) return;
+        if (health<=0) return;
         viewport.apply();
         batch.begin();
         Vector2 position = body.getPosition();

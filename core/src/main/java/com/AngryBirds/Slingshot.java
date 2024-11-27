@@ -49,7 +49,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         slingshotTexture = new Texture("Slingshot.png");
         birdSprite = new Sprite(birdTexture);
         slingshotSprite = new Sprite(slingshotTexture);
-        birdSprite.setSize(58, 65);
+        birdSprite.setSize(60, 60);
         slingshotSprite.setSize(80, 200);
         slingshotSprite.setOriginCenter();
         world = new World(new Vector2(0, -9.8f), true);
@@ -87,13 +87,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         slingshotTexture = new Texture("Slingshot.png");
         birdSprite = new Sprite(birdTexture);
         slingshotSprite = new Sprite(slingshotTexture);
-        if(bir == "black"){
-            birdSprite.setSize(58, 66);
-        }
-        else{
-            birdSprite.setSize(60, 60);
-
-        }
+        birdSprite.setSize(60, 60);
         slingshotSprite.setSize(80, 200);
         slingshotSprite.setOriginCenter();
         debugRenderer = new Box2DDebugRenderer();
