@@ -1,8 +1,11 @@
 package com.AngryBirds;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Container {
+public class Container implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private ArrayList<ArrayList<Float>> box = new ArrayList<>();
     private ArrayList<ArrayList<Float>> helmetpig = new ArrayList<>();
     private ArrayList<ArrayList<Float>> glassbox = new ArrayList<>();

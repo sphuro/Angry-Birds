@@ -62,6 +62,7 @@ public class ExitPage implements Screen {
         playopen=false;
         tickImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                ContainerHandler.save(game);
                 System.out.println("Tick clicked");
                 Gdx.app.exit();
             }

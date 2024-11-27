@@ -51,6 +51,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        ContainerHandler.load(this);
         bird = Gdx.audio.newMusic(Gdx.files.internal("bird.mp3"));
         pig = Gdx.audio.newMusic(Gdx.files.internal("pig.mp3"));
         slingshot = Gdx.audio.newMusic(Gdx.files.internal("slingshot.mp3"));
@@ -64,7 +65,7 @@ public class Main extends Game {
             scores.add(0);
             stars.add(0);
         }
-        setScreen(new LevelScreen(this));
+        setScreen(new LoadingScreen(this));
 //        setScreen(new Levelone(this));
 //        setScreen(new MenuScreen(this));
     }
