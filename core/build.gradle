@@ -11,6 +11,7 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
   dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0' // Use the latest version
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0' // Use the latest version
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
   }
 }
