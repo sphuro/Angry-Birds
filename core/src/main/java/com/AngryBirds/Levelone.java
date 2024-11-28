@@ -30,8 +30,8 @@ import static java.lang.Math.max;
 
 public class Levelone extends Main implements Screen {
     private SpriteBatch batch;
-    private OrthographicCamera camera;
-    private Stage stage;
+    public OrthographicCamera camera;
+    public Stage stage;
     private Viewport viewport;
     private Main game;
     private Texture background;
@@ -61,20 +61,26 @@ public class Levelone extends Main implements Screen {
     private BlackBird third;
     private LevelStructure structure;
     private Slingshot sling;
-    private World world;
+    public World world;
     private InputMultiplexer multiplexer;
-    private ArrayList<Slingshot> birds;
+    private static ArrayList<Slingshot> birds;
+    private static ArrayList<String> addbird;
     private Instant birdy;
     private boolean setted = false;
     private CheckCollision lis;
     private Instant noo;
     private static int score = 0;
 
+
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false,saved=false;
 
+    public Levelone(ArrayList<String> bird){
+        this.addbird = bird;
+    }
+
     public Levelone(Main game) {
-        System.out.println(game.getScores().get(0));
-        System.out.println(game.getStars().get(0));
+//        System.out.println(game.getScores().get(0));
+//        System.out.println(game.getStars().get(0));
         this.game = game;
         world = new World(new Vector2(0,-9.8f), true);
         batch = new SpriteBatch();
@@ -122,10 +128,12 @@ public class Levelone extends Main implements Screen {
         third=new BlackBird(game);
         birdy = Instant.now();
         birds = new ArrayList<>();
-        birds.add(new Slingshot(world,stage,"blue",camera,game));
-        birds.add(new Slingshot(world,stage,"black",camera,game));
-        birds.add(new Slingshot(world,stage,"red",camera,game));
-        birds.add(new Slingshot(world,stage,"yellow",camera,game));
+        this.addbird = new ArrayList<>();
+        addbird.add("red");
+        addbird.add("blue");
+        addbird.add("black");
+        addbird.add("yellow");
+        addbirds();
         structure=new LevelStructure(game,world,camera);
         structure.add("box",1050,220,81,81);
         structure.add("stonebox",1131,220,81,81);
@@ -187,6 +195,15 @@ public class Levelone extends Main implements Screen {
         });
         lis = new CheckCollision(world,game);
         world.setContactListener(lis);
+    }
+
+    public void addbirds(){
+        for(String i:addbird){
+            birds.add(new Slingshot(world,stage,i,camera,game));
+        }
+    }
+    public ArrayList<String> getbirds() {
+        return addbird;
     }
 
     @Override
