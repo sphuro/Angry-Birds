@@ -37,6 +37,8 @@ public class Stonebox extends Main implements Screen,Materials {
     private int initial_health = 300;
     private int health = initial_health;
 
+    public Stonebox(){}
+
     public Stonebox(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
@@ -78,11 +80,13 @@ public class Stonebox extends Main implements Screen,Materials {
     }
 
     public int getHealth() {
+        System.out.println("Stonebox health: "+health);
         return health;
     }
 
     public void setHealth(int health) {
         this.health = health;
+        System.out.println("Stonebox health health set to: "+health);
     }
     @Override
     public void show() {

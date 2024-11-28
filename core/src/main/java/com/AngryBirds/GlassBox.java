@@ -37,6 +37,8 @@ public class GlassBox extends Main implements Screen,Materials {
     private int initial_health = 100;
     private int health = initial_health;
 
+    public GlassBox(){}
+
     public GlassBox(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
@@ -78,11 +80,13 @@ public class GlassBox extends Main implements Screen,Materials {
     }
 
     public int getHealth() {
+        System.out.println("Glassbox health: "+health);
         return health;
     }
 
     public void setHealth(int health) {
         this.health = health;
+        System.out.println("Glassbox health health set to: "+health);
     }
     @Override
     public void show() {

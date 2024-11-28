@@ -1,26 +1,18 @@
 package com.AngryBirds;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.w3c.dom.Text;
 
-import javax.swing.event.ChangeListener;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -63,24 +55,23 @@ public class Levelone extends Main implements Screen {
     private Slingshot sling;
     public World world;
     private InputMultiplexer multiplexer;
-    private static ArrayList<Slingshot> birds;
-    private static ArrayList<String> addbird;
+    private ArrayList<Slingshot> birds;
+    private ArrayList<String> addbird;
     private Instant birdy;
     private boolean setted = false;
     private CheckCollision lis;
     private Instant noo;
     private static int score = 0;
-
+    private ArrayList<String> materials;
 
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false,saved=false;
 
-    public Levelone(ArrayList<String> bird){
+    public Levelone(ArrayList<String> bird, ArrayList<String> materials) {
         this.addbird = bird;
+        this.materials = materials;
     }
 
     public Levelone(Main game) {
-//        System.out.println(game.getScores().get(0));
-//        System.out.println(game.getStars().get(0));
         this.game = game;
         world = new World(new Vector2(0,-9.8f), true);
         batch = new SpriteBatch();
@@ -128,28 +119,22 @@ public class Levelone extends Main implements Screen {
         third=new BlackBird(game);
         birdy = Instant.now();
         birds = new ArrayList<>();
-        this.addbird = new ArrayList<>();
+        addbird = new ArrayList<>();
         addbird.add("red");
         addbird.add("blue");
         addbird.add("black");
         addbird.add("yellow");
         addbirds();
         structure=new LevelStructure(game,world,camera);
-        structure.add("box",1050,220,81,81);
-        structure.add("stonebox",1131,220,81,81);
-        structure.add("box",1212,220,81,81);
-        structure.add("box",1050,301,81,81);
-        structure.add("box",1131,301,81,81);
-        structure.add("glassbox",1131,382,81,81);
-        structure.add("log",1050,401,162,19);
-        structure.add("box",969,220,81,81);
-        structure.add("box",969,301,81,81);
-        structure.add("stonebox",969,382,81,81);
-        structure.add("stonebox",1050,463,81,81);
-        structure.add("helmetpig",969,430,60,60);
-        structure.add("pig",1212,268,60,60);
-        structure.add("pig",1050,349,60,60);
-        structure.add("kingpig",1050,535,75,72);
+        materials = new ArrayList<>();
+        materials.add("box");
+        materials.add("glassbox");
+        materials.add("stonebox");
+        materials.add("log");
+        materials.add("pig");
+        materials.add("kingpig");
+        materials.add("helmetpig");
+        makeStructure();
         pauseImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Pause clicked");
@@ -202,8 +187,49 @@ public class Levelone extends Main implements Screen {
             birds.add(new Slingshot(world,stage,i,camera,game));
         }
     }
+
     public ArrayList<String> getbirds() {
+        System.out.println("length of birds: "+addbird.size());
         return addbird;
+    }
+
+    public void makeStructure(){
+        for(String i: materials){
+            if( i.equals("box")){
+                structure.add(i,1050,220,81,81);
+                structure.add(i,1212,220,81,81);
+                structure.add(i,1050,301,81,81);
+                structure.add(i,1131,301,81,81);
+                structure.add(i,969,220,81,81);
+                structure.add(i,969,301,81,81);
+            }
+            else if(i.equals("stonebox")){
+                structure.add(i,1131,220,81,81);
+                structure.add(i,969,382,81,81);
+                structure.add(i,1050,463,81,81);
+            }
+            else if(i.equals("glassbox")){
+                structure.add(i,1131,382,81,81);
+            }
+            else if(i.equals("log")){
+                structure.add(i,1050,401,162,19);
+            }
+            else if(i.equals("pig")){
+                structure.add(i,1212,268,60,60);
+                structure.add(i,1050,349,60,60);
+            }
+            else if(i.equals("kingpig")){
+                structure.add(i,1050,535,75,72);
+            }
+            else if(i.equals("helmetpig")){
+                structure.add(i,969,430,60,60);
+            }
+        }
+    }
+
+    public ArrayList<String> getmaterials() {
+        System.out.println("length of materials: "+materials.size());
+        return materials;
     }
 
     @Override
