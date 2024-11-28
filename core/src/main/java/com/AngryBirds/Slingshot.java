@@ -167,7 +167,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         };
     }
 
-    private void launchBird(Vector2 force) {
+    public void launchBird(Vector2 force) {
         if (game.isSoundopen()) game.getBird().play();
         bird.setActive(true);
         bird.setTransform(birdpos.x / 100f, birdpos.y / 100f, 0);

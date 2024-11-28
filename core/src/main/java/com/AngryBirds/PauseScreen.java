@@ -99,24 +99,28 @@ public class PauseScreen extends Main implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Music clicked");
                 game.setMusicopen(!game.isMusicopen());
+                MusicHandler.save(game);
             }
         });
         musiconImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Music clicked");
                 game.setMusicopen(!game.isMusicopen());
+                MusicHandler.save(game);
             }
         });
         soundoffImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Music clicked");
                 game.setSoundopen(!game.isSoundopen());
+                SoundHandler.save(game);
             }
         });
         soundonImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Music clicked");
                 game.setSoundopen(!game.isSoundopen());
+                SoundHandler.save(game);
             }
         });
         restartImage.addListener(new ClickListener() {

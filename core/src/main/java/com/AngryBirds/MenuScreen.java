@@ -213,9 +213,9 @@ public class MenuScreen extends Main implements Screen {
             game.setScreen(new ExitPage(game));
         }
         else if (saveopen) {
-            if (game.gameContainer.getLevel()==1) game.setScreen(new Leveloneload(game,game.gameContainer));
-            else if (game.gameContainer.getLevel()==2) game.setScreen(new Leveltwoload(game,game.gameContainer));
-            else if (game.gameContainer.getLevel()==3) game.setScreen(new Levelthreeload(game,game.gameContainer));
+            if (game.getGameContainer().getLevel()==1) game.setScreen(new Leveloneload(game,game.getGameContainer()));
+            else if (game.getGameContainer().getLevel()==2) game.setScreen(new Leveltwoload(game,game.getGameContainer()));
+            else if (game.getGameContainer().getLevel()==3) game.setScreen(new Levelthreeload(game,game.getGameContainer()));
         }
         else {
             musicoffImage.remove();

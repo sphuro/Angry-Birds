@@ -101,24 +101,28 @@ public class SettingPage implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Music clicked");
                 game.setMusicopen(!game.isMusicopen());
+                MusicHandler.save(game);
             }
         });
         musicoffImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Music clicked");
                 game.setMusicopen(!game.isMusicopen());
+                MusicHandler.save(game);
             }
         });
         soundoffImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Sound clicked");
                 game.setSoundopen(!game.isSoundopen());
+                SoundHandler.save(game);
             }
         });
         soundonImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("Sound clicked");
                 game.setSoundopen(!game.isSoundopen());
+                SoundHandler.save(game);
             }
         });
         settingImage.addListener(new ClickListener() {

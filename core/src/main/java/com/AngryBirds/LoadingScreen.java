@@ -62,7 +62,7 @@ public class LoadingScreen extends Main implements Screen {
         batch.draw(background, 0, 0,1600,900);
         batch.draw(loadingblank, 620, 200,400,40);
         if (Duration.between(start, Instant.now()).toMillis() > 3920) {
-            game.setScreen(new Login_or_Signup(game));
+            game.setScreen(new MenuScreen(game));
         }
         batch.draw(loadingfull, 624, 204, Duration.between(start,Instant.now()).toMillis()*0.1f,32);
         batch.end();

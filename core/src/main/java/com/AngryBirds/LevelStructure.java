@@ -66,16 +66,23 @@ public class LevelStructure extends Main implements Screen {
 
     }
 
+    public void destroyboxes() {
+        for (Box box : boxes) {
+            box.setHealth(0);
+            world.destroyBody(box.getbody());
+        }
+    }
+
     public boolean checkpig() {
         int cnt = 0;
         for (Pig pig : pigs) {
-            if (!pig.isDestroyed()) cnt++;
+            if (pig.gethealth()>0) cnt++;
         }
         for (KingPig pig : kingpigs) {
-            if (!pig.isDestroyed()) cnt++;
+            if (pig.gethealth()>0) cnt++;
         }
         for (HelmetPig pig : helmetPigs) {
-            if (!pig.isDestroyed()) cnt++;
+            if (pig.gethealth()>0) cnt++;
         }
         return cnt == 0;
     }

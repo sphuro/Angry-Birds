@@ -278,6 +278,7 @@ public class Levelthreeload extends Main implements Screen {
             game.getStars().set(2,max(curr,game.getStars().get(2)));
             game.getScores().set(2,max(structure.calculate_score(),game.getScores().get(2)));
             pa = new LevelPassed(game,birds.size(),structure.calculate_score());
+            StarsHandler.save(game);
             passed=true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.L)) {
@@ -295,8 +296,8 @@ public class Levelthreeload extends Main implements Screen {
         }
         else if (saved) {
             paused = false;
-            game.gameContainer = new Container();
-            game.gameContainer.setLevel(3);
+            game.setGameContainer(new Container());
+            game.getGameContainer().setLevel(3);
             for (Log i:structure.getLogs()) {
                 ArrayList<Float> toadd = new ArrayList<>();
                 toadd.add(i.getbody().getPosition().x);
@@ -304,7 +305,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getLog().add(toadd);
+                game.getGameContainer().getLog().add(toadd);
             }
             for (Box i: structure.getBoxes()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -313,7 +314,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getBox().add(toadd);
+                game.getGameContainer().getBox().add(toadd);
             }
             for (Pig i:structure.getPigs()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -322,7 +323,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getPig().add(toadd);
+                game.getGameContainer().getPig().add(toadd);
             }
             for (KingPig i: structure.getKingpigs()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -331,7 +332,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getKingpig().add(toadd);
+                game.getGameContainer().getKingpig().add(toadd);
             }
             for (HelmetPig i:structure.getHelmetPigs()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -340,7 +341,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getHelmetpig().add(toadd);
+                game.getGameContainer().getHelmetpig().add(toadd);
             }
             for (Stonebox i: structure.getStonebox()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -349,7 +350,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getStonebox().add(toadd);
+                game.getGameContainer().getStonebox().add(toadd);
             }
             for (StoneLog i: structure.getStonelog()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -358,7 +359,7 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getStonelog().add(toadd);
+                game.getGameContainer().getStonelog().add(toadd);
             }
             for (GlassBox i: structure.getGlassbox()) {
                 ArrayList<Float> toadd = new ArrayList<>();
@@ -367,13 +368,14 @@ public class Levelthreeload extends Main implements Screen {
                 toadd.add(i.width);
                 toadd.add(i.height);
                 toadd.add((float)i.gethealth());
-                game.gameContainer.getGlassbox().add(toadd);
+                game.getGameContainer().getGlassbox().add(toadd);
             }
             int curr = birds.size();
             if (curr>0 && birds.get(0).isDestroyed()) {
                 curr--;
             }
-            game.gameContainer.setBirds(curr);
+            game.getGameContainer().setBirds(curr);
+            ContainerHandler.save(game);
             saved = false;
             game.setScreen(new SavingPage(game));
         }
@@ -465,6 +467,7 @@ public class Levelthreeload extends Main implements Screen {
                 game.getStars().set(2,max(curr,game.getStars().get(2)));
                 game.getScores().set(2,max(structure.calculate_score(),game.getScores().get(2)));
                 pa = new LevelPassed(game,birds.size(),structure.calculate_score());
+                StarsHandler.save(game);
                 passed=true;
             }
             if (birds.size()==0) {

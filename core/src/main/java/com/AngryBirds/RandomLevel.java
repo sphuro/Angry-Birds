@@ -283,6 +283,9 @@ public class RandomLevel extends Main implements Screen {
             if (Objects.equals(out, "paused")) paused=false;
             else if (Objects.equals(out, "exit")) game.setScreen(new MenuScreen(game));
             else if (Objects.equals(out, "restart")) game.setScreen(new RandomLevel(game));
+            else if (Objects.equals(out,"saved")) {
+                paused = false;
+            }
         }
         else if (failed) {
             musicoffImage.remove();
