@@ -37,6 +37,7 @@ public class Stonebox extends Main implements Screen,Materials {
     private int initial_health = 300;
     private int health = initial_health;
 
+
     public Stonebox(){}
 
     public Stonebox(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {

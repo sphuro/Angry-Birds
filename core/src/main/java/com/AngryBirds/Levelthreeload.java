@@ -271,13 +271,15 @@ public class Levelthreeload extends Main implements Screen {
         else multiplexer.setProcessors(stage, birds.get(0).getFirst());
         Gdx.input.setInputProcessor(multiplexer);
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            int curr = 0;
-            if (birds.size()<=1) curr = 1;
-            else if (birds.size()==2) curr = 2;
-            else curr = 3;
-            game.getStars().set(2,max(curr,game.getStars().get(2)));
+            int curr = birds.size();
+            if (curr>0 && birds.get(0).isDestroyed()) curr--;
+            int stars;
+            if (curr==0) stars = 1;
+            else if (curr==1) stars = 2;
+            else stars = 3;
+            game.getStars().set(2,max(stars,game.getStars().get(2)));
             game.getScores().set(2,max(structure.calculate_score(),game.getScores().get(2)));
-            pa = new LevelPassed(game,birds.size(),structure.calculate_score());
+            pa = new LevelPassed(game,stars,structure.calculate_score());
             StarsHandler.save(game);
             passed=true;
         }
@@ -460,13 +462,15 @@ public class Levelthreeload extends Main implements Screen {
             if (birds.size()>=3) second.draw(200,220,56,60);
             if (birds.size()>=4) third.draw(245,220,58,60);
             if (structure.checkpig()) {
-                int curr = 0;
-                if (birds.size()<=1) curr = 1;
-                else if (birds.size()==2) curr = 2;
-                else curr = 3;
-                game.getStars().set(2,max(curr,game.getStars().get(2)));
+                int curr = birds.size();
+                if (curr>0 && birds.get(0).isDestroyed()) curr--;
+                int stars;
+                if (curr==0) stars = 1;
+                else if (curr==1) stars = 2;
+                else stars = 3;
+                game.getStars().set(2,max(stars,game.getStars().get(2)));
                 game.getScores().set(2,max(structure.calculate_score(),game.getScores().get(2)));
-                pa = new LevelPassed(game,birds.size(),structure.calculate_score());
+                pa = new LevelPassed(game,stars,structure.calculate_score());
                 StarsHandler.save(game);
                 passed=true;
             }

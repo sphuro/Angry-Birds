@@ -38,7 +38,6 @@ public class Box extends Main implements Screen,Materials {
     private int health = initial_health;
 
     public Box(){}
-
     public Box(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
@@ -88,6 +87,7 @@ public class Box extends Main implements Screen,Materials {
         this.health = health;
         System.out.println("Woodbox health set to: "+health);
     }
+
     @Override
     public void show() {
 

@@ -25,7 +25,6 @@ public class SoundHandler implements Serializable {
         try (ObjectInputStream toload = new ObjectInputStream(new FileInputStream(file))) {
             boolean cust = (boolean) toload.readObject();
             game.setSoundopen((boolean) cust);
-            System.out.println(cust);
         } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error!!!");
         }

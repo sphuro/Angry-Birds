@@ -73,6 +73,6 @@ public class TestClass {
         Assertions.assertEquals(50, health, "Box health should be 100 after 100 damage");
     }
 
-    
+
 
 }

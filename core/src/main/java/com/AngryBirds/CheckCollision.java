@@ -46,10 +46,13 @@ public class CheckCollision implements ContactListener {
         for (float normalImpulse : impulse.getNormalImpulses()) {
             mx = max(mx,normalImpulse);
         }
+        int mul = 1;
+        if (fixtureA.getUserData()=="red") mul = 2;
+        if (fixtureB.getUserData()=="red") mul = 2;
         if (fixtureB.getUserData() instanceof Materials && mx>0.4f) {
             Materials objB = (Materials) fixtureB.getUserData();
-            if (objB.gethealth()<=mx*100 && game.isSoundopen()) game.getPig().play();
-            objB.sethealth((int) (objB.gethealth()-mx*10));
+            if (objB.gethealth()<=mx*100*mul && game.isSoundopen()) game.getPig().play();
+            objB.sethealth((int) (objB.gethealth()-mx*100*mul));
             if (objB.gethealth()<=0) {
                 objB.destroy();
                 todestroy.add(objB.getbody());
@@ -57,8 +60,8 @@ public class CheckCollision implements ContactListener {
         }
         if (fixtureA.getUserData() instanceof Materials && mx>0.4f) {
             Materials objA = (Materials) fixtureA.getUserData();
-            if (objA.gethealth()<=mx*100 && game.isSoundopen()) game.getPig().play();
-            objA.sethealth((int) (objA.gethealth()-mx*100));
+            if (objA.gethealth()<=mx*100*mul && game.isSoundopen()) game.getPig().play();
+            objA.sethealth((int) (objA.gethealth()-mx*100*mul));
             if (objA.gethealth()<=0) {
                 objA.destroy();
                 todestroy.add(objA.getbody());

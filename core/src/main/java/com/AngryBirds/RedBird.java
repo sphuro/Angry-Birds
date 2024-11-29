@@ -26,6 +26,7 @@ public class RedBird extends Main implements Screen,Bird {
         without = new Texture("red_without.png");
         with = new Texture("red_with.png");
     }
+
     @Override
     public void show() {
 

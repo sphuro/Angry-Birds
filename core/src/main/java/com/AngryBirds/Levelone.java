@@ -1,18 +1,26 @@
 package com.AngryBirds;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import org.w3c.dom.Text;
 
+import javax.swing.event.ChangeListener;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -22,8 +30,8 @@ import static java.lang.Math.max;
 
 public class Levelone extends Main implements Screen {
     private SpriteBatch batch;
-    public OrthographicCamera camera;
-    public Stage stage;
+    private OrthographicCamera camera;
+    private Stage stage;
     private Viewport viewport;
     private Main game;
     private Texture background;
@@ -53,15 +61,15 @@ public class Levelone extends Main implements Screen {
     private BlackBird third;
     private LevelStructure structure;
     private Slingshot sling;
-    public World world;
+    private World world;
     private InputMultiplexer multiplexer;
     private ArrayList<Slingshot> birds;
-    private ArrayList<String> addbird;
     private Instant birdy;
     private boolean setted = false;
     private CheckCollision lis;
     private Instant noo;
     private static int score = 0;
+    private ArrayList<String> addbird;
     private ArrayList<String> materials;
 
     private boolean paused,exited=false,restarting=false,failed=false,passed=false,nextc=false,saved=false;
@@ -120,9 +128,9 @@ public class Levelone extends Main implements Screen {
         birdy = Instant.now();
         birds = new ArrayList<>();
         addbird = new ArrayList<>();
-        addbird.add("red");
         addbird.add("blue");
         addbird.add("black");
+        addbird.add("red");
         addbird.add("yellow");
         addbirds();
         structure=new LevelStructure(game,world,camera);
@@ -232,6 +240,7 @@ public class Levelone extends Main implements Screen {
         return materials;
     }
 
+
     @Override
     public void show() {
 
@@ -254,13 +263,15 @@ public class Levelone extends Main implements Screen {
         else multiplexer.setProcessors(stage, birds.get(0).getFirst());
         Gdx.input.setInputProcessor(multiplexer);
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            int curr = 0;
-            if (birds.size()<=1) curr = 1;
-            else if (birds.size()==2) curr = 2;
-            else curr = 3;
-            game.getStars().set(0,max(curr,game.getStars().get(0)));
+            int curr = birds.size();
+            if (curr>0 && birds.get(0).isDestroyed()) curr--;
+            int stars;
+            if (curr==0) stars = 1;
+            else if (curr==1) stars = 2;
+            else stars = 3;
+            game.getStars().set(0,max(stars,game.getStars().get(0)));
             game.getScores().set(0,max(structure.calculate_score(),game.getScores().get(0)));
-            pa = new LevelPassed(game,birds.size(),structure.calculate_score());
+            pa = new LevelPassed(game,stars,structure.calculate_score());
             StarsHandler.save(game);
             passed=true;
         }
@@ -443,13 +454,15 @@ public class Levelone extends Main implements Screen {
             if (birds.size()>=3) second.draw(200,220,56,60);
             if (birds.size()>=4) third.draw(245,220,58,60);
             if (structure.checkpig()) {
-                int curr = 0;
-                if (birds.size()<=1) curr = 1;
-                else if (birds.size()==2) curr = 2;
-                else curr = 3;
-                game.getStars().set(0,max(curr,game.getStars().get(0)));
+                int curr = birds.size();
+                if (curr>0 && birds.get(0).isDestroyed()) curr--;
+                int stars;
+                if (curr==0) stars = 1;
+                else if (curr==1) stars = 2;
+                else stars = 3;
+                game.getStars().set(0,max(stars,game.getStars().get(0)));
                 game.getScores().set(0,max(structure.calculate_score(),game.getScores().get(0)));
-                pa = new LevelPassed(game,birds.size(),structure.calculate_score());
+                pa = new LevelPassed(game,stars,structure.calculate_score());
                 StarsHandler.save(game);
                 passed=true;
             }

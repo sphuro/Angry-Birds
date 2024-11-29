@@ -9,7 +9,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Objects;
 
 public class Slingshot extends ApplicationAdapter implements Screen {
     private OrthographicCamera camera;
@@ -29,6 +31,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
     private Instant no;
     private Main game;
     private String color;
+    private int powerup;
 
     public Instant getNo() {
         return no;
@@ -117,6 +120,7 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         floorBody.createFixture(fixtureDef);
         createBirdBody();
         setupInputProcessor();
+        powerup = 0;
     }
 
     private void createBirdBody() {
@@ -131,9 +135,10 @@ public class Slingshot extends ApplicationAdapter implements Screen {
         fixtureDef.density = 1f;
         fixtureDef.restitution = 0.8f;
         fixtureDef.friction = 0.5f;
-        bird.createFixture(fixtureDef);
+        Fixture fixture = bird.createFixture(fixtureDef);
         shape.dispose();
         bird.setActive(false);
+        fixture.setUserData(color);
     }
 
     public void setupInputProcessor() {
@@ -159,8 +164,48 @@ public class Slingshot extends ApplicationAdapter implements Screen {
                 if (destroyed) return false;
                 if (curr) {
                     curr = false;
-                    Vector2 releaseForce = sling.cpy().sub(birdpos).scl(-1.1f);
+                    Vector2 releaseForce = sling.cpy().sub(birdpos).scl(-1f);
                     launchBird(releaseForce);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                if (Objects.equals(color, "yellow") && isDestroyed() && powerup==0) {
+                    powerup++;
+                    bird.setLinearVelocity(new Vector2(bird.getLinearVelocity().x+10, bird.getLinearVelocity().y));
+                }
+                if (Objects.equals(color, "black") && isDestroyed() && powerup==0) {
+                    powerup++;
+                    birdSprite.setSize(96, 96);
+                    Body body = bird;
+                    BodyDef bodyDef = new BodyDef();
+                    bodyDef.type = BodyDef.BodyType.DynamicBody;
+                    bodyDef.position.set(bird.getPosition());
+                    bodyDef.position.set(birdpos.x / 100f, birdpos.y / 100f);
+                    bird = world.createBody(bodyDef);
+                    CircleShape shape = new CircleShape();
+                    shape.setRadius(0.4f);
+                    FixtureDef fixtureDef = new FixtureDef();
+                    fixtureDef.shape = shape;
+                    fixtureDef.density = 1f;
+                    fixtureDef.restitution = 0.8f;
+                    fixtureDef.friction = 0.5f;
+                    bird.createFixture(fixtureDef);
+                    shape.dispose();
+                    bird.setActive(true);
+                    bird.setLinearVelocity(body.getLinearVelocity());
+                    bird.setAngularVelocity(body.getAngularVelocity());
+                    world.destroyBody(body);
+                }
+                if (Objects.equals(color, "blue") && isDestroyed() && powerup==0) {
+                    powerup++;
+                    bird.applyForceToCenter(new World(new Vector2(0,-200),true).getGravity(),true);
+                }
+                if (Objects.equals(color,"red") && isDestroyed() && powerup==0) {
+                    powerup++;
+                    bird.setLinearVelocity(-bird.getLinearVelocity().x, bird.getLinearVelocity().y);
                 }
                 return true;
             }

@@ -49,9 +49,7 @@ public class LevelPassed extends Main implements Screen {
 
     public LevelPassed(Main game,int stars,int score) {
         this.game = game;
-        if (stars<=1) this.stars=1000;
-        else if (stars==2) this.stars=2000;
-        else this.stars=3000;
+        this.stars = 1000*stars;
         this.score=score;
         batch = new SpriteBatch();
         camera = new OrthographicCamera();

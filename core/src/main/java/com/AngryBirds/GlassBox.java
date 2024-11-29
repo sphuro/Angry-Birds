@@ -37,8 +37,8 @@ public class GlassBox extends Main implements Screen,Materials {
     private int initial_health = 100;
     private int health = initial_health;
 
-    public GlassBox(){}
 
+    public GlassBox(){}
     public GlassBox(Main game, float x, float y, float width, float height, World world, OrthographicCamera camera) {
         this.game = game;
         this.camera = camera;
