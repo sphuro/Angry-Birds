@@ -140,6 +140,10 @@ ___
 ```
 unzip Angry-Birds.zip
 ```
+- go to the directory
+```
+cd Angry-Birds
+```
 - run the gradle file
 ```
 chmod +x gradlew
@@ -148,7 +152,7 @@ chmod +x gradlew
 
 ## Github Link
 ____
-https://github.com/heckerm4n/Angry-Birds
+https://github.com/sphuro/Angry-Birds
 
 ## Creators
 ___
