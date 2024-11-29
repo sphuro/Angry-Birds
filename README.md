@@ -77,6 +77,26 @@ ___
 28. ### VerticalLog
     Helps in drawing vertical log
 
+29. ### StarHandler
+    Helps to save the starts of all levels
+
+30. ### SoundHandler
+    Helps to save sound(off/On) for the game
+
+31. ### Container
+   Helps to save and load all the information of the game
+32. ### Leveloneload
+    Helps to load levelone
+
+33. ### TestCLass
+Test Levelone class, stonebox, Glassbox, Box
+
+## Power-ups of Birds
+- **YellowBird**: Gains speed when clicked after launched, making its impulse increase.
+- **BlackBird**: becomes big after clicking, causing its damge to increase.
+- **BlueBird**: Goes staraight down after clicking, allowing to hit strucure from top.
+- **RedBird**: Reverses direction like a boomrang, helps to hit structure from behind.
+
 ## Use Case
 ___
 ![image](usecase.png)
@@ -103,6 +123,8 @@ ___
 
 ## How to run
 ___
+
+#### load in intelliJ idea
 ```
 - Unzip the file.
 - Go to lwjgl3.
@@ -113,6 +135,17 @@ ___
 - Then Lwjgl3Launcher.
 - Then click on Run.
 ```
+#### load in terminal
+- Unzip the file.
+```
+unzip Angry-Birds.zip
+```
+- run the gradle file
+```
+chmod +x gradlew
+./gradlew run
+```
+
 ## Github Link
 ____
 https://github.com/heckerm4n/Angry-Birds
